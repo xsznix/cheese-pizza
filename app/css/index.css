@@ -1,0 +1,21 @@
+* {
+	box-sizing: border-box;
+}
+
+html, body {
+	height: 100%;
+	margin: 0;
+	overflow: hidden;
+
+	font-size: 100%;
+}
+
+#wrapper {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+h1, h2, h3, h4, h5, h6, div, p, span, input, textarea, th, td, li, blockquote {
+	font-family: 'Open Sans';
+}

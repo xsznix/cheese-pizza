@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Cheese Pizza</title>
+
+	<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+	<link rel="stylesheet" href="css/index.css">
+	<link rel="stylesheet" href="css/scaffold.css">
+	<link rel="stylesheet" href="css/header.css">
+	<link rel="stylesheet" href="css/sidebar.css">
+	<link rel="stylesheet" href="css/list.css">
+	<link rel="stylesheet" href="css/card-view.css">
+</head>
+<body>
+
+<div id="header">
+	<div id="app-title">Cheese Pizza</div>
+</div>
+
+<div id="content">
+	<div id="sidebar">
+		<div id="account-info" class="section">
+			John Doe
+		</div>
+
+		<div id="courses" class="section">
+			<h2>Courses</h2>
+			<div class="course all clickable">All</div>
+			<div class="course clickable">CS 311</div>
+			<div class="course clickable selected">CS 314</div>
+		</div>
+
+		<div id="filters" class="section">
+			<h2>Filters</h2>
+			<div class="filter none clickable selected">None</div>
+			<div class="filter clickable">Student</div>
+			<div class="filter clickable">Instructor</div>
+			<div class="filter clickable">Unread</div>
+			<div class="filter clickable">Unresolved</div>
+			<div class="filter clickable">Updated</div>
+			<div class="filter clickable">Following</div>
+			<div class="filter clickable">Archived</div>
+		</div>
+
+		<div id="folders" class="section">
+			<h2>Folders</h2>
+			<div class="tag none clickable selected">Show All</div>
+			<div class="tag clickable">Polls</div>
+			<div class="tag clickable">HW1</div>
+			<div class="tag clickable">HW2</div>
+			<div class="tag clickable">HW3</div>
+			<div class="tag clickable">HW4</div>
+			<div class="tag clickable">HW5</div>
+			<div class="tag clickable">HW6</div>
+			<div class="tag clickable">HW7</div>
+			<div class="tag clickable">HW8</div>
+			<div class="tag clickable">HW9</div>
+			<div class="tag clickable">HW10</div>
+			<div class="tag clickable">HW11</div>
+			<div class="tag clickable">Exam</div>
+			<div class="tag clickable">Logistics</div>
+			<div class="tag clickable">Other</div>
+		</div>
+
+		<div id="options" class="section">
+			<h2>Options</h2>
+			<div class="option clickable">About</div>
+			<div class="option clickable">Preferences</div>
+			<div class="option clickable">Send Feedback</div>
+			<div class="option clickable">Logout</div>
+		</div>
+	</div>
+	
+	<div id="list">
+
+		<div id="search">
+			<span class="fa fa-search"></span>
+			<input type="text" id="search-box" placeholder="Search">
+		</div>
+		
+		<div class="bucket">
+			<h2>Today</h2>
+			<div class="item question">
+				<div class="header">
+					<div class="title">How to type cast</div>
+					<div class="time">11:59PM</div>
+				</div>
+				<div class="content">
+					<div class="message">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus voluptatem cum illum labore. Numquam reiciendis, cumque laudantium sed, maxime dignissimos excepturi accusamus quidem, aperiam voluptate quibusdam temporibus. Veritatis quaerat, blanditiis.</div>
+					<div class="meta">
+						<div class="unresolved-count">3</div>
+						<div class="unviewed-count">129</div>
+						<div class="has-student-answer">S</div>
+						<div class="has-instructor-answer">I</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	
+	<div id="card-view">
+		
+		<div class="card op question">
+			<h2>How to type cast</h2>
+			<div class="author">5 hours ago by Anonymous</div>
+			<div class="content">
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus voluptatem cum illum labore. Numquam reiciendis, cumque laudantium sed, maxime dignissimos excepturi accusamus quidem, aperiam voluptate quibusdam temporibus. Veritatis quaerat, blanditiis.</p>
+				<p>Debitis laborum facilis ducimus repellat officiis illo! Libero nulla autem eius recusandae vero amet pariatur, excepturi obcaecati vitae explicabo maxime, quibusdam ut officia quam itaque, in qui mollitia non, nesciunt!</p>
+
+				<pre><code>public static void main(String[] args) {
+	System.out.println("Hello world!");
+}</code></pre>
+
+				<p>Consectetur ea molestias ipsum voluptatem esse cupiditate aspernatur tempora vitae, cum rem sit officia ipsam modi fuga suscipit facilis, reprehenderit maiores eaque numquam laborum dolor sapiente nam, unde reiciendis. Culpa.</p>
+				<p>This is an example of <tt>inline code</tt>.</p>
+			</div>
+			<hr>
+			<div class="meta">
+				<a href="#" class="edit">Edit</a>
+				<a href="#" class="thank">Thank</a>
+				<a href="#" class="follow">Follow</a>
+				<a href="#" class="fav">Favorite</a>
+				<div class="separator"></div>
+				<div class="views"><i class="fa fa-eye"></i>15</div>
+				<div class="likes"><i class="fa fa-thumbs-up"></i>3</div>
+			</div>
+		</div>
+		<div class="card answer student-answer"></div>
+		<div class="card answer instructor-answer"></div>
+	
+	</div>
+</div>
+
+</body>
+</html>

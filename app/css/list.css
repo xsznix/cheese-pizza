@@ -1,0 +1,137 @@
+/* SEARCH */
+
+#list #search {
+	display: flex;
+	width: 100%;
+	border: 0;
+	border-bottom: 1px solid #ddd;
+	padding: 4px;
+
+	color: #666;
+}
+
+#list #search .fa {
+	margin-top: 5px;
+	margin-left: 4px;
+
+	color: #aaa;
+}
+
+#list #search #search-box {
+	flex: 1 1;
+	border: 0;
+	padding: 4px 8px;
+
+	font-size: 14px;
+}
+
+/* LIST ITEMS */
+
+#list-scroll {
+	flex: 1 1;
+	overflow: scroll;
+}
+
+#list .bucket h2 {
+	margin: 0;
+	padding: 0 8px;
+
+	background: #eee;
+	color: #555;
+
+	font-size: 12px;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+#list .item {
+	padding: 8px;
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: -1px;
+	cursor: pointer;
+}
+
+#list .item:hover, #list.item.selected {
+	background: #f4f4f4;
+}
+
+/* LIST ITEM HEADER */
+
+#list .item .header, #list .item .content {
+	display: flex;
+}
+
+#list .item .header .title {
+	flex: 1 1;
+
+	font-weight: 700;
+	font-size: 15px;
+
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#list .item .header .time {
+	margin-top: 2px;
+	color: #999;
+	font-size: 12px;
+}
+
+/* LIST ITEM CONTENT */
+
+#list .item .message {
+	flex: 1 1;
+
+	color: #888;
+	font-size: 12px;
+
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* LIST ITEM ACTIONS */
+
+#list .item .meta {
+	display: flex;
+	margin-right: -2px;
+}
+
+#list .item .meta .unresolved-count,
+#list .item .meta .unviewed-count,
+#list .item .meta .has-student-answer,
+#list .item .meta .has-instructor-answer {
+	height: 17px;
+	width: 14px;
+	margin: 0 1px;
+	border-radius: 4px;
+
+	color: rgba(255, 255, 255, 0.75);
+
+	font-size: 12px;
+	text-align: center;
+}
+
+#list .item .meta .unresolved-count {
+	width: auto;
+	min-width: 14px;
+	padding: 0 2px;
+	background: #e74c3c;
+}
+
+#list .item .meta .unviewed-count {
+	width: auto;
+	min-width: 14px;
+	padding: 0 2px;
+	background: #888;
+}
+
+#list .item .meta .has-student-answer {
+	background: #2ecc71;
+}
+
+#list .item .meta .has-instructor-answer {
+	background: #f39c12;
+}

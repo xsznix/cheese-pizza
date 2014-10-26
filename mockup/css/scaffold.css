@@ -1,0 +1,34 @@
+#content {
+	display: flex;
+	flex: 1 1;
+	width: 100%;
+}
+
+#header {
+	height: 36px;
+	background: #3498db;
+	color: #fff;
+}
+
+#sidebar {
+	width: 200px;
+
+	background: #444;
+	color: #fff;
+
+	overflow: scroll;
+}
+
+#list {
+	width: 300px;
+
+	overflow: scroll;
+}
+
+#card-view {
+	flex: 1 1;
+
+	background: #f4f4f4;
+
+	overflow: scroll;
+}

@@ -1,0 +1,21 @@
+{
+	"name": "Cheese Pizza",
+	"version": "1.0.0",
+	"manifest_version": 2,
+	"description": "A lightweight alternative to the Piazza web interface.",
+	"app": {
+		"background": {
+			"scripts": [
+				"app/js/vendor/jquery.js",
+				"app/js/background.js"
+			],
+			"persistent": false
+		}
+	},
+	"permissions": [
+		"https://piazza.com/",
+		"http://maxcdn.bootstrapcdn.com/",
+		"alarms",
+		"notifications"
+	]
+}

@@ -52,7 +52,7 @@
 	cursor: pointer;
 }
 
-#list .item:hover, #list.item.selected {
+#list .item:hover, #list .item.selected {
 	background: #f4f4f4;
 }
 

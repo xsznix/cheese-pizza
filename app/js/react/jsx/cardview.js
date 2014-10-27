@@ -9,7 +9,7 @@ var OpCard = React.createClass({
 	render: function () {
 		var card = this.props.card,
 			classes = 'card op ' + card.type,
-			q = card.history[card.history.length - 1];
+			q = card.history[0];
 		return (
 			<div className={classes}>
 				<h2>{q.subject}</h2>
@@ -23,7 +23,7 @@ var OpCard = React.createClass({
 					<a href="#" className="star">Star</a>
 					<div className="separator" />
 					<div className="views"><i className="fa fa-eye" />{card.unique_views}</div>
-					<div className="likes"><i className="fa fa-thumbs-up" />{card.upvote_ids.length}</div>
+					<div className="likes"><i className="fa fa-thumbs-up" />{card.upvote_ids ? card.upvote_ids.length : 0}</div>
 				</div>
 			</div>);
 	}
@@ -38,7 +38,7 @@ var AnswerCard = React.createClass({
 		var card = this.props.card,
 			classes = 'card answer ' + card.type,
 			title = card.type === 's_answer' ? 'The students\' answer' : 'The instructors\' answer', 
-			a = card.history[card.history.length - 1];
+			a = card.history[0];
 
 		return (
 			<div className={classes}>
@@ -71,7 +71,7 @@ var FollowupThread = React.createClass({
 var FollowupCard = React.createClass({
 	displayName: 'FollowupCard',
 	propTypes: {
-		threads: React.PropTypes.object.isRequired
+		threads: React.PropTypes.array.isRequired
 	},
 	render: function () {
 		var threads = this.props.threads;
@@ -80,7 +80,7 @@ var FollowupCard = React.createClass({
 			<div className="card followup">
 				<h2>Follow-up discussions</h2>
 				{threads.map(function (thread) {
-					return <FollowupThread thread={thread} />;
+					return <FollowupThread key={thread.id} thread={thread} />;
 				})}
 			</div>)
 	}

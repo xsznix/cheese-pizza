@@ -26,6 +26,8 @@ var ListItem = React.createClass({
 		// TODO: verify that these data actually mean what I think they mean
 		if (card.no_answer)
 			classes.push('no-answer');
+		if (card.is_new)
+			classes.push('new');
 		if (card.no_answer_followup)
 			followup_div = <div className="unresolved-count">{card.no_answer_followup}</div>;
 		if (card.view_adjust)
@@ -42,7 +44,7 @@ var ListItem = React.createClass({
 					<div className="time">{card.log[0].t}</div>
 				</div>
 				<div className="content">
-					<div className="message">{card.content_snipet}</div>
+					<div className="message" dangerouslySetInnerHTML={{__html: card.content_snipet}}></div>
 					<div className="meta">
 						{unresolved_div}
 						{unviewed_div}

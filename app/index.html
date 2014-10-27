@@ -4,16 +4,28 @@
 	<meta charset="utf-8">
 	<title>Cheese Pizza: Piazza Viewer</title>
 
-	<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet"><!-- TODO: make local -->
+	<link rel="stylesheet" href="css/vendor/font-awesome.css">
 	<link rel="stylesheet" href="css/vendor/codemirror.css">
 	<link rel="stylesheet" href="css/vendor/hljs/xcode.css">
+	<link rel="stylesheet" href="css/open-sans.css">
 
 	<link rel="stylesheet" href="css/index.css">
+	<link rel="stylesheet" href="css/login.css">
 	<link rel="stylesheet" href="css/scaffold.css">
 	<link rel="stylesheet" href="css/header.css">
 	<link rel="stylesheet" href="css/sidebar.css">
 	<link rel="stylesheet" href="css/list.css">
 	<link rel="stylesheet" href="css/card-view.css">
+</head>
+<body>
+	<div class="wrapper">
+		<div id="header"></div>
+		<div id="content">
+			<div id="sidebar"></div>
+			<div id="list"></div>
+			<div id="card-view"></div>
+		</div>
+	</div>
 
 	<script src="js/vendor/jquery.js"></script>
 	<script src="js/vendor/react.js"></script>
@@ -21,6 +33,7 @@
 	<script src="js/vendor/codemirror.js"></script>
 
 	<script src="js/p.js"></script>
+	<script src="js/store.js"></script>
 
 	<script src="js/react/login.js"></script>
 	<script src="js/react/header.js"></script>
@@ -30,7 +43,5 @@
 	<script src="js/react/scaffold.js"></script>
 
 	<script src="js/index.js"></script>
-</head>
-<body>
 </body>
 </html>

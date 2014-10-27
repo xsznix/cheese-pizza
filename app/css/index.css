@@ -10,12 +10,26 @@ html, body {
 	font-size: 100%;
 }
 
+#header {
+	height: 36px;
+}
+
 #wrapper {
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+	overflow: hidden;
 }
 
-h1, h2, h3, h4, h5, h6, div, p, span, input, textarea, th, td, li, blockquote {
+#content {
+	position: absolute;
+	top: 36px;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	overflow: hidden;
+}
+
+h1, h2, h3, h4, h5, h6, div, p, span, input, textarea, th, td, li, blockquote, input[type=text], input[type=password] {
 	font-family: 'Open Sans';
 }

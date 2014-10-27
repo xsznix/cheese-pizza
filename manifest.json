@@ -14,8 +14,10 @@
 	},
 	"permissions": [
 		"https://piazza.com/",
+		"http://piazza.com/",
 		"http://maxcdn.bootstrapcdn.com/",
 		"alarms",
-		"notifications"
+		"notifications",
+		"storage"
 	]
 }

@@ -3,9 +3,11 @@ var P = (function (P, undefined) {
 	var API_METHOD_PREFIX = 'https://piazza.com/logic/api?method=',
 		AID_PREFIX = '&aid=',
 		URL_LOGIN = 'https://piazza.com/class',
+		API_LOGOUT = 'user.logout',
 		API_FEED = 'network.get_my_feed',
 		API_CONTENT = 'content.get',
-		API_USER_STATUS = 'user.status';
+		API_USER_STATUS = 'user.status',
+		API_GET_USERS = 'network.get_users';
 
 	function aid () {
 		return (new Date()).getTime().toString(36) +
@@ -29,7 +31,10 @@ var P = (function (P, undefined) {
 			$.ajax({
 				url: api(method),
 				type: 'POST',
-				data: JSON.stringify(data)
+				data: JSON.stringify({
+					method: method,
+					params: data
+				})
 			}).done(validateJSON(resolve, reject)).fail(reject);
 		});
 	}
@@ -45,8 +50,20 @@ var P = (function (P, undefined) {
 					password: password,
 					remember: 'on'
 				}
-			}).done(resolve).fail(reject);
+			}).done(verifyLogin).fail(reject);
+
+			function verifyLogin(data) {
+				var $error = $('.modal-error-message.is-visible', data);
+				if ($error.length)
+					reject(new Error($error.text().trim()));
+				else
+					resolve();
+			}
 		});
+	}
+
+	P.logout = function () {
+		return apiCall(API_LOGOUT, {});
 	}
 
 	P.getFeed = function (course, offset, limit, sort) {
@@ -55,32 +72,44 @@ var P = (function (P, undefined) {
 		sort = sort || 'updated';
 
 		return apiCall(API_FEED, {
-			method: API_FEED,
-			params: {
-				nid: course,
-				offset: offset,
-				limit: limit,
-				sort: sort
-			}
+			nid: course,
+			offset: offset,
+			limit: limit,
+			sort: sort
 		});
 	}
 
 	P.getContent = function (contentId, course) {
 		return apiCall(API_CONTENT, {
-			method: API_CONTENT,
-			params: {
-				cid: contentId,
-				nid: course
-			}
+			cid: contentId,
+			nid: course
 		});
 	}
 
-	P.getUser = function () {
-		return apiCall(API_USER_STATUS, {
-			method: API_USER_STATUS,
-			params: {}
+	P.getSelf = function () {
+		return apiCall(API_USER_STATUS, {});
+	}
+
+	P.getUsers = function (userIds, course) {
+		return apiCall(API_GET_USERS, {
+			ids: userIds,
+			nid: course
 		});
 	}
+
+	P.FILTERS = [
+		['None', ''],
+		['Starred', 'starred'],
+		['Student', 'student'],
+		['Instructor', 'instructor'],
+		['Question', 'question'],
+		['Note', 'note'],
+		['Poll', 'poll'],
+		['Unread', 'unread'],
+		['Unresolved', 'unresolved'],
+		['Updated', 'updated'],
+		['Following', 'following'],
+		['Archived', 'archived']]
 
 	return P;
 

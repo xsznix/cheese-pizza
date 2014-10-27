@@ -23,14 +23,19 @@
 	cursor: pointer;
 }
 
+#sidebar .course .course-name {
+	font-size: 12px;
+	font-weight: 400;
+}
+
 #sidebar .clickable:hover, #sidebar .clickable.selected {
 	background: rgba(255,255,255,0.125);
 }
 
-#sidebar :first-child {
+#sidebar > :first-child {
 	margin-top: 16px;
 }
 
-#sidebar :last-child {
+#sidebar > :last-child {
 	margin-bottom: 16px;
 }

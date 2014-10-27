@@ -4,51 +4,106 @@
 var Scaffold = React.createClass({
 	displayName: 'Scaffold',
 	propTypes: {
-		courses: React.PropTypes.array.isRequired,
-		cards: React.PropTypes.object.isRequired
+		user: React.PropTypes.object.isRequired,
+		feeds: React.PropTypes.object.isRequired
 	},
 	getInitialState: function () {
-		var activeCourse = this.props.courses[0];
+		var activeCourse = this.props.user.networks[0];
 		return {
-			selectedCourse: activeCourse.id,
-			selectedFilter: '',
+			selectedCourse: activeCourse,
+			selectedFilter: P.FILTERS[0],
 			selectedFolder: '',
 			selectedCard: '',
 			selectedOption: '',
-			filteredCards: this.props.cards[activeCourse.id],
+			filteredCards: this.props.feeds[activeCourse.id].feed,
 			selectedCardData: null
 		}
 	},
 
-	handleSelectCourse: function (event) {
+	filterCards: function (course, filter, folder) {
+		var user = this.props.user,
+			cards = this.props.feeds[course != undefined ? course.id : this.state.selectedCourse.id].feed,
+			selectedFilter = filter != undefined ? filter[1] : this.state.selectedFilter[1],
+			selectedFolder = folder != undefined ? folder : this.state.selectedFolder;
+
+		// apply filter
+		if (selectedFilter === '') {} // noop; break
+		else if (selectedFilter === 'student')
+			cards = cards.filter(function (card) {
+				return card.tags.indexOf('student') !== -1;
+			});
+		else if (selectedFilter === 'instructor')
+			cards = cards.filter(function (card) {
+				return card.tags.indexOf('instructor-note') !== -1 ||
+				       card.tags.indexOf('instructor-question') !== -1;
+			});
+		else if (selectedFilter === 'question' || selectedFilter === 'note' || selectedFilter === 'poll')
+			cards = cards.filter(function (card) {
+				return selectedFilter === card.type;
+			});
+		else if (selectedFilter === 'unread')
+			cards = cards.filter(function (card) {
+				return card.is_new;
+			});
+		else if (selectedFilter === 'unresolved')
+			cards = cards.filter(function (card) {
+				return !!card.no_answer_followup;
+			});
+		else if (selectedFilter === 'updated')
+			cards = cards.filter(function (card) {
+				return !!card.view_adjust;
+			});
+		else if (selectedFilter === 'following')
+			cards = cards.filter(function (card) {
+				return true; // TODO
+			});
+		else if (selectedFilter === 'archived')
+			cards = cards.filter(function (card) {
+				return false; // TODO
+			});
+
+		// apply folder
+		if (selectedFolder !== '')
+			cards = cards.filter(function (card) {
+				return card.folders.indexOf(selectedFolder) !== -1;
+			});
+
+		return cards;
+	},
+
+	handleSelectCourse: function (course) {
 		this.setState({
-			selectedCourse: event.target.value
+			selectedCourse: course,
+			filteredCards: this.filterCards(course)
 		});
 	},
-	handleSelectFilter: function (event) {
+	handleSelectFilter: function (filter) {
 		this.setState({
-			selectedFilter: event.target.value
+			selectedFilter: filter,
+			filteredCards: this.filterCards(undefined, filter)
 		});
 	},
-	handleSelectFolder: function (event) {
+	handleSelectFolder: function (folder) {
 		this.setState({
-			selectedFolder: event.target.value
+			selectedFolder: folder,
+			filteredCards: this.filterCards(undefined, undefined, folder)
 		});
 	},
-	handleSelectOption: function (event) {
+	handleSelectOption: function (option) {
 		this.setState({
-			selectedOption: event.target.value
+			selectedOption: option
 		});
 	},
 	handleSelectCard: function (id) {
-		var setState = this.setState.bind(this);
+		var setState = this.setState.bind(this), _this = this;
 		setState({
 			selectedCard: id
 		});
 		P.getContent(id, this.state.activeCourse).then(function (result) {
-			setState({
-				selectedCardData: result
-			});
+			if (_this.state.selectedCard === id)
+				setState({
+					selectedCardData: result
+				});
 		});
 	},
 
@@ -57,7 +112,7 @@ var Scaffold = React.createClass({
 			<div id="wrapper">
 				<Header />
 				<div id="content">
-					<Sidebar courses={this.props.courses}
+					<Sidebar user={this.props.user}
 					         selectedCourse={this.state.selectedCourse}
 					         selectedFilter={this.state.selectedFilter}
 					         selectedFolder={this.state.selectedFolder}

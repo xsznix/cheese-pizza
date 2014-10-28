@@ -48,9 +48,16 @@ Store.getLoginState().then(function (state) {
 			Store.getFeeds().then(function (feeds) {
 				React.renderComponent(Scaffold({
 					user: self,
-					feeds: feeds
+					feeds: feeds,
+					doRefresh: doRefresh
 				}), document.body);
 			});
+		});
+	}
+
+	function doRefresh(nid) {
+		P.getFeed(nid).then(function (feed) {
+			Store.setFeed(nid, feed).then(renderDashboard);
 		});
 	}
 });

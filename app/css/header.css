@@ -4,3 +4,20 @@
 	font-size: 20px;
 	font-weight: 300;
 }
+
+#header-actions {
+	margin: 0 4px;
+}
+
+#header-actions a {
+	display: block;
+	padding: 7px 10px;
+	color: inherit;
+	font-weight: 300;
+	text-decoration: none;
+}
+
+#header-actions a:hover {
+	background: rgba(255,255,255,0.125);
+	text-decoration: underline;
+}

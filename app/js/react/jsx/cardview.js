@@ -13,7 +13,7 @@ var OpCard = React.createClass({
 		return (
 			<div className={classes}>
 				<h2>{q.subject}</h2>
-				<div className="author">{q.created} by {q.anon === 'no' ? q.uid : q.anon}</div>
+				<div className="author">{Dates.longRel(q.created)} by {q.anon === 'no' ? q.uid : q.anon}</div>
 				<div className="content" dangerouslySetInnerHTML={{__html: q.content}} />
 				<hr />
 				<div className="meta">
@@ -23,7 +23,7 @@ var OpCard = React.createClass({
 					<a href="#" className="star">Star</a>
 					<div className="separator" />
 					<div className="views"><i className="fa fa-eye" />{card.unique_views}</div>
-					<div className="likes"><i className="fa fa-thumbs-up" />{card.upvote_ids ? card.upvote_ids.length : 0}</div>
+					<div className="likes"><i className="fa fa-thumbs-up" />{card.tag_good.length}</div>
 				</div>
 			</div>);
 	}
@@ -43,7 +43,7 @@ var AnswerCard = React.createClass({
 		return (
 			<div className={classes}>
 				<h2>{title}</h2>
-				<div className="author">{a.created} by {a.anon === 'no' ? a.uid : a.anon}</div>
+				<div className="author">{Dates.longRel(a.created)} by {a.anon === 'no' ? a.uid : a.anon}</div>
 				<div className="content" dangerouslySetInnerHTML={{__html: a.content}} />
 			</div>)
 	}

@@ -5,7 +5,9 @@ var Scaffold = React.createClass({
 	displayName: 'Scaffold',
 	propTypes: {
 		user: React.PropTypes.object.isRequired,
-		feeds: React.PropTypes.object.isRequired
+		feeds: React.PropTypes.object.isRequired,
+
+		doRefresh: React.PropTypes.func.isRequired
 	},
 	getInitialState: function () {
 		var activeCourse = this.props.user.networks[0];
@@ -19,10 +21,16 @@ var Scaffold = React.createClass({
 			selectedCardData: null
 		}
 	},
+	componentWillReceiveProps: function (props) {
+		this.setState({
+			filteredCards: this.filterCards(undefined, undefined, undefined, props)
+		});
+	},
 
-	filterCards: function (course, filter, folder) {
-		var user = this.props.user,
-			cards = this.props.feeds[course != undefined ? course.id : this.state.selectedCourse.id].feed,
+	filterCards: function (course, filter, folder, props) {
+		var props = props != undefined ? props : this.props,
+			user = props.user,
+			cards = props.feeds[course != undefined ? course.id : this.state.selectedCourse.id].feed,
 			selectedFilter = filter != undefined ? filter[1] : this.state.selectedFilter[1],
 			selectedFolder = folder != undefined ? folder : this.state.selectedFolder;
 
@@ -71,6 +79,7 @@ var Scaffold = React.createClass({
 		return cards;
 	},
 
+	// event handlers
 	handleSelectCourse: function (course) {
 		this.setState({
 			selectedCourse: course,
@@ -110,7 +119,8 @@ var Scaffold = React.createClass({
 	render: function () {
 		return (
 			<div id="wrapper">
-				<Header />
+				<Header course={this.state.selectedCourse}
+				        doRefresh={this.props.doRefresh} />
 				<div id="content">
 					<Sidebar user={this.props.user}
 					         selectedCourse={this.state.selectedCourse}

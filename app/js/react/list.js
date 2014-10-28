@@ -15,6 +15,7 @@ var ListItem = React.createClass({
 			unviewed_div = null,
 			s_div = null,
 			i_div = null,
+			note_div = null,
 			handleSelectCard = this.props.handleSelectCard,
 			selectThis = function () {
 				handleSelectCard(card.id);
@@ -36,12 +37,14 @@ var ListItem = React.createClass({
 			s_div = React.DOM.div({className: "has-student-answer"}, "S");
 		if (card.has_i)
 			i_div = React.DOM.div({className: "has-instructor-answer"}, "I");
+		if (card.type === 'note')
+			note_div = React.DOM.div({className: "is-note fa fa-bars"});
 
 		return (
 			React.DOM.div({className: classes.join(' '), onClick: selectThis}, 
 				React.DOM.div({className: "header"}, 
 					React.DOM.div({className: "title"}, card.subject), 
-					React.DOM.div({className: "time"}, card.log[0].t)
+					React.DOM.div({className: "time"}, Dates.shortRel(card.log[0].t))
 				), 
 				React.DOM.div({className: "content"}, 
 					React.DOM.div({className: "message", dangerouslySetInnerHTML: {__html: card.content_snipet}}), 
@@ -49,7 +52,8 @@ var ListItem = React.createClass({
 						unresolved_div, 
 						unviewed_div, 
 						s_div, 
-						i_div
+						i_div, 
+						note_div
 					)
 				)
 			))

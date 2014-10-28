@@ -13,7 +13,7 @@ var OpCard = React.createClass({
 		return (
 			React.DOM.div({className: classes}, 
 				React.DOM.h2(null, q.subject), 
-				React.DOM.div({className: "author"}, q.created, " by ", q.anon === 'no' ? q.uid : q.anon), 
+				React.DOM.div({className: "author"}, Dates.longRel(q.created), " by ", q.anon === 'no' ? q.uid : q.anon), 
 				React.DOM.div({className: "content", dangerouslySetInnerHTML: {__html: q.content}}), 
 				React.DOM.hr(null), 
 				React.DOM.div({className: "meta"}, 
@@ -23,7 +23,7 @@ var OpCard = React.createClass({
 					React.DOM.a({href: "#", className: "star"}, "Star"), 
 					React.DOM.div({className: "separator"}), 
 					React.DOM.div({className: "views"}, React.DOM.i({className: "fa fa-eye"}), card.unique_views), 
-					React.DOM.div({className: "likes"}, React.DOM.i({className: "fa fa-thumbs-up"}), card.upvote_ids ? card.upvote_ids.length : 0)
+					React.DOM.div({className: "likes"}, React.DOM.i({className: "fa fa-thumbs-up"}), card.tag_good.length)
 				)
 			));
 	}
@@ -43,7 +43,7 @@ var AnswerCard = React.createClass({
 		return (
 			React.DOM.div({className: classes}, 
 				React.DOM.h2(null, title), 
-				React.DOM.div({className: "author"}, a.created, " by ", a.anon === 'no' ? a.uid : a.anon), 
+				React.DOM.div({className: "author"}, Dates.longRel(a.created), " by ", a.anon === 'no' ? a.uid : a.anon), 
 				React.DOM.div({className: "content", dangerouslySetInnerHTML: {__html: a.content}})
 			))
 	}

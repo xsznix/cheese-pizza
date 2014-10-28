@@ -135,3 +135,11 @@
 #list .item .meta .has-instructor-answer {
 	background: #f39c12;
 }
+
+#list .item .meta .is-note {
+	padding: 4px 2px 0 2px;
+	border-radius: 4px;
+	background: #777;
+	color: #ddd;
+	font-size: 10px;
+}

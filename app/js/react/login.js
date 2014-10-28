@@ -41,7 +41,7 @@ var LoginForm = React.createClass({
 	render: function () {
 		var errorDiv = null;
 		if (this.state.error)
-			errorDiv = React.DOM.p({id: "error"}, this.state.error);
+			errorDiv = React.DOM.p({id: "error", className: "info"}, this.state.error);
 
 		return (
 			React.DOM.div({className: "login-wrapper"}, 

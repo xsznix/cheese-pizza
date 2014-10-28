@@ -10,14 +10,14 @@ var Scaffold = React.createClass({
 		doRefresh: React.PropTypes.func.isRequired
 	},
 	getInitialState: function () {
-		var activeCourse = this.props.user.networks[0];
+		var activeCourse = this.props.user.last_network;
 		return {
-			selectedCourse: activeCourse,
+			selectedCourse: this.props.user.networks.filter(function (n) { return n.id === activeCourse})[0], // hack fixme
 			selectedFilter: P.FILTERS[0],
 			selectedFolder: '',
 			selectedCard: '',
 			selectedOption: '',
-			filteredCards: this.props.feeds[activeCourse.id].feed,
+			filteredCards: this.props.feeds[activeCourse].feed,
 			selectedCardData: null
 		}
 	},

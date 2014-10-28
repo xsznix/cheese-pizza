@@ -15,6 +15,7 @@ var ListItem = React.createClass({
 			unviewed_div = null,
 			s_div = null,
 			i_div = null,
+			followup_div = null,
 			note_div = null,
 			handleSelectCard = this.props.handleSelectCard,
 			selectThis = function () {
@@ -51,6 +52,7 @@ var ListItem = React.createClass({
 					<div className="meta">
 						{unresolved_div}
 						{unviewed_div}
+						{followup_div}
 						{s_div}
 						{i_div}
 						{note_div}

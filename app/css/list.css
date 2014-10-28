@@ -45,15 +45,11 @@
 }
 
 #list .item {
-	padding: 8px;
+	padding: 8px 12px;
 	border-top: 1px solid #ddd;
 	border-bottom: 1px solid #ddd;
 	margin-bottom: -1px;
 	cursor: pointer;
-}
-
-#list .item:hover, #list .item.selected {
-	background: #f4f4f4;
 }
 
 /* LIST ITEM HEADER */
@@ -142,4 +138,27 @@
 	background: #777;
 	color: #ddd;
 	font-size: 10px;
+}
+
+/* UNANSWERED */
+
+#list .item.no-answer {
+	background: #fee;
+	color: #833;
+}
+
+#list .item.no-answer .message {
+	color: rgba(0,0,0,0.5);
+}
+
+/* NEW */
+
+#list .item.new {
+	padding-left: 8px;
+	border-left: 4px solid #3498db;
+}
+
+/* SELECTED (takes highest precedence) */
+#list .item:hover, #list .item.selected {
+	background: #f4f4f4;
 }

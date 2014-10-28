@@ -1,3 +1,5 @@
+'use strict';
+
 var P = (function (P, undefined) {
 
 	var API_METHOD_PREFIX = 'https://piazza.com/logic/api?method=',

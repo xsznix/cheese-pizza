@@ -32,8 +32,8 @@ var ListItem = React.createClass({
 			classes.push('new');
 		if (card.no_answer_followup)
 			followup_div = <div className="unresolved-count">{card.no_answer_followup}</div>;
-		if (card.view_adjust)
-			unviewed_div = <div className="unviewed-count">{card.view_adjust}</div>;
+		if (card.main_version !== card.version)
+			unviewed_div = <div className="unviewed-count">{card.main_version - (card.version || 0)}</div>;
 		if (card.has_s)
 			s_div = <div className="has-student-answer">S</div>;
 		if (card.has_i)

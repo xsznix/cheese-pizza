@@ -30,11 +30,11 @@
 
 /* CARD CONTENT */
 
-#card-view .card > .content {
+#card-view .card  .content {
 	font-size: 14px;
 }
 
-#card-view .card > .content tt {
+#card-view .card  .content tt {
 	display: inline-block;
 	vertical-align: baseline;
 	padding: 0 2px;
@@ -44,7 +44,7 @@
 	border-radius: 2px;
 }
 
-#card-view .card > .content pre {
+#card-view .card  .content pre {
 	display: block;
 	padding: 4px;
 	background: #f4f4f4;
@@ -90,4 +90,18 @@
 
 #card-view .card > .meta > .separator {
 	flex: 1 1;
+}
+
+/* FOLLOWUP THREAD DELIMITERS */
+.card.followup .thread:not(:last-child) {
+	padding-bottom: 16px;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 24px;
+}
+
+.card.followup .thread .feedback {
+	margin: 12px 0;
+	padding: 1px 20px;
+	border-left: 3px solid #eee;
+	background: #fafafa;
 }

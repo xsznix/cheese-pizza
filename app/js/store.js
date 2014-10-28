@@ -1,3 +1,6 @@
+'use strict';
+
+// TODO: cache everything in memory to speed up store access
 var Store = function (Store, undefined) {
 
 	var s = chrome.storage.local,
@@ -31,24 +34,6 @@ var Store = function (Store, undefined) {
 		});
 	}
 
-	function clone (obj) {
-		if (obj == null || typeof obj !== 'object') return obj;
-		var newObj = obj.constructor();
-		for (var k in obj)
-			if (Object.prototype.hasOwnProperty.call(obj, k))
-				newObj[k] = obj[k];
-		return newObj;
-	}
-
-	function objKeys (obj) {
-		if (obj == null || typeof obj !== 'object') return null;
-		var keys = [];
-		for (var k in obj)
-			if (Object.prototype.hasOwnProperty.call(obj, k))
-				keys.push(k);
-		return keys;
-	}
-
 	Store.getLoginState = function () {
 		return get('state', function (state, resolve, reject) {
 			state = state || DEFAULT_STATE;
@@ -57,7 +42,7 @@ var Store = function (Store, undefined) {
 	}
 	Store.setLoginState = function (loginState) {
 		return get('state', function (state, resolve, reject) {
-			state = state || clone(DEFAULT_STATE);
+			state = state || F.clone(DEFAULT_STATE);
 			state.login = loginState;
 			set('state', state).then(resolve, reject);
 		});
@@ -114,33 +99,40 @@ var Store = function (Store, undefined) {
 		return set('self', self);
 	}
 
+	Store.getAllUsers = function () {
+		return get('users');
+	}
 	Store.getUsers = function (userIds, course) {
 		return get('users', function (users, resolve, reject) {
-			if (userIds && userIds.length) {
-				// to get O(1) search time
-				var userHash = {}
+			var courseUsers = F.clone(users[course]);
+
+			if (courseUsers && userIds && userIds.length) {
+				// initially, we haven't found any users in the stored users
+				var notFoundHash = {}
 				userIds.forEach(function (id) {
-					userHash[id] = true;
+					notFoundHash[id] = true;
 				});
 
-				for (var k in users)
-					if (Object.prototype.hasOwnProperty.call(users, k))
-						if (!Object.prototype.hasOwnProperty.call(userHash, k))
-							delete users[k];
-						else
-							delete userHash[k];
+				// now. we can find users in the hash
+				F.eachKey(courseUsers, function (k, v) {
+					if (Object.prototype.hasOwnProperty.call(notFoundHash, k))
+						delete notFoundHash[k];
+					else
+						delete courseUsers[k];
+				})
 			}
 
-			resolve({found: users || {}, notFound: objKeys(userHash) || {}});
+			resolve({found: courseUsers || null, notFound: F.keys(notFoundHash) || userIds});
 		})
 	}
 	Store.setUsers = function (newUsers, course) {
 		return get('users', function (users, resolve, reject) {
 			if (!users) users = {};
-			for (var k in newUsers)
-				if (Object.prototype.hasOwnProperty.call(newUsers, k))
-					users[k] = newUsers[k];
-			return set('users', users);
+			if (!users[course]) users[course] = {};
+			F.eachKey(newUsers, function (k, v) {
+				users[course][k] = v;
+			});
+			set('users', users).then(resolve, reject);
 		})
 	}
 

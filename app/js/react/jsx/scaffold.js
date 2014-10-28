@@ -6,8 +6,11 @@ var Scaffold = React.createClass({
 	propTypes: {
 		user: React.PropTypes.object.isRequired,
 		feeds: React.PropTypes.object.isRequired,
+		names: React.PropTypes.object.isRequired,
 
-		doRefresh: React.PropTypes.func.isRequired
+		doRefresh: React.PropTypes.func.isRequired,
+		doLoadNames: React.PropTypes.func.isRequired,
+		doMarkAsRead: React.PropTypes.func.isRequired
 	},
 	getInitialState: function () {
 		var activeCourse = this.props.user.last_network;
@@ -83,7 +86,9 @@ var Scaffold = React.createClass({
 	handleSelectCourse: function (course) {
 		this.setState({
 			selectedCourse: course,
-			filteredCards: this.filterCards(course)
+			filteredCards: this.filterCards(course),
+			selectedCard: '', // unshow card, to avoid course ambiguity problems
+			selectedCardData: null
 		});
 	},
 	handleSelectFilter: function (filter) {
@@ -115,8 +120,13 @@ var Scaffold = React.createClass({
 				});
 		});
 	},
+	handleLoadNames: function (uids) {
+		this.props.doLoadNames(uids, this.state.selectedCourse.id);
+	},
 
 	render: function () {
+		var namesInCourse = this.props.names[this.state.selectedCourse.id] || {};
+
 		return (
 			<div id="wrapper">
 				<Header course={this.state.selectedCourse}
@@ -134,7 +144,10 @@ var Scaffold = React.createClass({
 					<List cards={this.state.filteredCards}
 					      selectedCard={this.state.selectedCard}
 					      handleSelectCard={this.handleSelectCard} />
-					<CardView card={this.state.selectedCardData} />
+					<CardView card={this.state.selectedCardData}
+					          names={namesInCourse}
+					          doLoadNames={this.handleLoadNames}
+					          doMarkAsRead={this.props.doMarkAsRead} />
 				</div>
 			</div>
 		)

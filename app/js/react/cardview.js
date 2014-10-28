@@ -15,7 +15,7 @@ var OpCard = React.createClass({
 		return (
 			React.DOM.div({className: classes}, 
 				React.DOM.h2(null, q.subject), 
-				React.DOM.div({className: "author"}, Dates.longRel(q.created), " by ", q.anon === 'no' ? name(q.uid) : q.anon), 
+				React.DOM.div({className: "author"}, Dates.longRel(q.created), " by ", name(q)), 
 				React.DOM.div({className: "content", dangerouslySetInnerHTML: {__html: q.content}}), 
 				React.DOM.hr(null), 
 				React.DOM.div({className: "meta"}, 
@@ -47,7 +47,7 @@ var AnswerCard = React.createClass({
 		return (
 			React.DOM.div({className: classes}, 
 				React.DOM.h2(null, title), 
-				React.DOM.div({className: "author"}, Dates.longRel(a.created), " by ", a.anon === 'no' ? name(a.uid) : 'Anonymous'), 
+				React.DOM.div({className: "author"}, Dates.longRel(a.created), " by ", name(a)), 
 				React.DOM.div({className: "content", dangerouslySetInnerHTML: {__html: a.content}})
 			))
 	}
@@ -137,8 +137,13 @@ var CardView = React.createClass({
 			return !loaded.hasOwnProperty(uid);
 		});
 	},
-	safeGetName: function (uid) {
-		return this.props.names[uid] ? this.props.names[uid].name : '...';
+	safeGetName: function (u) {
+		if (u.anon === 'no')
+			return this.props.names[u.uid] ? this.props.names[u.uid].name : '...';
+		else if (u.anon === 'stud')
+			return 'Anonymous (to students)';
+		else
+			return 'Anonymous';
 	},
 	render: function () {
 		if (this.props.card == null) return React.DOM.div({id: "card-view"});

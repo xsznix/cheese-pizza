@@ -157,6 +157,13 @@ var CardView = React.createClass({
 		else
 			return 'Anonymous';
 	},
+	scrollToTop: function () {
+		this.refs.card.getDOMNode().scrollTop = 0;
+	},
+	componentDidUpdate: function (prevProps) {
+		if (this.props.card && (this.props.card !== prevProps.card))
+			this.scrollToTop();
+	},
 	render: function () {
 		if (this.props.card == null) return React.DOM.div({id: "card-view"});
 
@@ -179,7 +186,7 @@ var CardView = React.createClass({
 			followupCard = FollowupCard({threads: children.followups, getName: this.safeGetName});
 
 		return (
-			React.DOM.div({id: "card-view"}, 
+			React.DOM.div({id: "card-view", ref: "card"}, 
 				OpCard({card: card, getName: this.safeGetName}), 
 				s_ansCard, 
 				i_ansCard, 

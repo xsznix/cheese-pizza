@@ -32,7 +32,7 @@ Store.getLoginState().then(function (state) {
 						names: users || {},
 						doRefresh: doRefresh,
 						doLoadNames: doLoadNames,
-						doMarkAsRead: function () {} // TODO
+						doMarkAsRead: doMarkAsRead
 					}), document.body);
 				})
 			});
@@ -40,18 +40,54 @@ Store.getLoginState().then(function (state) {
 	}
 
 	function doRefresh (nid) {
-		P.getFeed(nid).then(function (feed) {
-			Store.setFeed(nid, feed).then(renderDashboard);
+		P.getSelf().then(function (self) {
+			Store.setSelf(self).then(function () {
+				P.getFeed(nid).then(function (feed) {
+					Store.setFeed(nid, feed).then(renderDashboard);
+				});
+			});
 		});
 	}
 
+	var loadingNames = {};
+	/**
+	 * Loads the names of the users in `uid` by user ID from the course `nid`.
+	 * To avoid loading the same name twice because of successive calls to this
+	 * function, we keep track of all of the uids that have names loading in the
+	 * variable `loadingNames`, removing them once either the request is complete
+	 * or the request has failed.
+	 */
 	function doLoadNames (uids, nid) {
 		Store.getUsers(uids, nid).then(function (users) {
+			// don't do anything if everything is in Store already
 			if (users.notFound && users.notFound.length)
-				P.getUsers(users.notFound, nid).then(function (newUsers) {
-					var newUserHash = F.keyify(newUsers, 'id');
-					Store.setUsers(newUserHash, nid).then(renderDashboard);
+				var namesToLoad = users.notFound.filter(function (uid) {
+					return !loadingNames[uid];
 				});
+				users.notFound.forEach(function (uid) {
+					loadingNames[uid] = true;
+				});
+				// don't send the request if we don't want to load any names
+				if (namesToLoad.length)
+					P.getUsers(namesToLoad, nid).then(function (newUsers) {
+						var newUserHash = F.keyify(newUsers, 'id');
+						newUsers.forEach(function (user) {
+							delete loadingNames[user.id];
+						});
+						Store.setUsers(newUserHash, nid).then(renderDashboard);
+					}, function (e) {
+						console.err(e);
+						namesToLoad.forEach(function (uid) {
+							delete loadingNames[uid];
+						});
+					});
 		});
+	}
+
+	function doMarkAsRead (newContent, listItemContent, nid) {
+		var newListItemContent = F.clone(listItemContent);
+		newListItemContent.version = listItemContent.main_version;
+		newListItemContent.is_new = false;
+		Store.setFeedItem(nid, newContent.id, newListItemContent).then(renderDashboard);
 	}
 });

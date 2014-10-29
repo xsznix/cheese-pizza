@@ -71,6 +71,22 @@ var Store = function (Store, undefined) {
 			set('feeds', feeds).then(resolve, reject);
 		});
 	}
+	Store.setFeedItem = function (nid, cid, content) {
+		return get('feeds', function (feeds, resolve, reject) {
+			if (!feeds) reject(new Error('No feed found.'));
+			else if (!feeds[nid]) reject(new Error('The specified course does not have a feed.'));
+			else {
+				var feed = feeds[nid].feed, len = feed.length;
+				for (var i = 0; i < len; i++) {
+					if (feed[i].id === cid) {
+						feed[i] = content;
+						Store.setFeed(nid, feeds[nid]).then(resolve, reject)
+						break;
+					}
+				}
+			}
+		})
+	}
 
 	Store.getContent = function (cid, nid) {
 		return get('content', function (content, resolve, reject) {

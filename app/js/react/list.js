@@ -19,7 +19,7 @@ var ListItem = React.createClass({
 			note_div = null,
 			handleSelectCard = this.props.handleSelectCard,
 			selectThis = function () {
-				handleSelectCard(card.id);
+				handleSelectCard(card);
 			};
 
 		if (this.props.selectedCard === card.id)

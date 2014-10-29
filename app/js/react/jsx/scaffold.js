@@ -62,7 +62,7 @@ var Scaffold = React.createClass({
 			});
 		else if (selectedFilter === 'updated')
 			cards = cards.filter(function (card) {
-				return !!card.view_adjust;
+				return card.main_version !== card.version;
 			});
 		else if (selectedFilter === 'following')
 			cards = cards.filter(function (card) {
@@ -108,16 +108,19 @@ var Scaffold = React.createClass({
 			selectedOption: option
 		});
 	},
-	handleSelectCard: function (id) {
+	handleSelectCard: function (card) {
 		var setState = this.setState.bind(this), _this = this;
+
 		setState({
-			selectedCard: id
+			selectedCard: card.id
 		});
-		P.getContent(id, this.state.activeCourse).then(function (result) {
-			if (_this.state.selectedCard === id)
+
+		P.getContent(card.id, this.state.activeCourse).then(function (result) {
+			if (_this.state.selectedCard === card.id)
 				setState({
 					selectedCardData: result
 				});
+			_this.props.doMarkAsRead(result, card, _this.state.selectedCourse.id);
 		});
 	},
 	handleLoadNames: function (uids) {

@@ -24,6 +24,18 @@ var F = (function (F, undefined) {
 	}
 
 	/**
+	 * Creates an object out of an array, using the value of each element in the
+	 * array as keys, with values initialized to `val`.
+	 */
+	F.keyEach = function (arr, val) {
+		var obj = {};
+		arr.forEach(function (item) {
+			obj[item] = val;
+		});
+		return obj;
+	}
+
+	/**
 	 * Creates a new object with all of the properties of both objects. If the
 	 * input objects both have a property, the property value from the second
 	 * object will be used.
@@ -35,6 +47,22 @@ var F = (function (F, undefined) {
 		});
 		F.eachKey(b, function (k, v) {
 			obj[k] = v;
+		});
+		return obj;
+	}
+
+	/**
+	 * Creates a new object with all of the properties of the first object, but
+	 * with the values of the corresponding properties in the second object if
+	 * they exist.
+	 */
+	F.updateProps = function (a, b) {
+		var obj = {};
+		F.eachKey(a, function (k, v) {
+			if (b.hasOwnProperty(k))
+				obj[k] = b[k];
+			else
+				obj[k] = v;
 		});
 		return obj;
 	}

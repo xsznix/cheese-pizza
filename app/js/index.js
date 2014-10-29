@@ -71,10 +71,12 @@ Store.getLoginState().then(function (state) {
 				if (namesToLoad.length)
 					P.getUsers(namesToLoad, nid).then(function (newUsers) {
 						var newUserHash = F.keyify(newUsers, 'id');
-						newUsers.forEach(function (user) {
-							delete loadingNames[user.id];
+						Store.setUsers(newUserHash, nid).then(function () {
+							renderDashboard();
+							newUsers.forEach(function (user) {
+								delete loadingNames[user.id];
+							});
 						});
-						Store.setUsers(newUserHash, nid).then(renderDashboard);
 					}, function (e) {
 						console.err(e);
 						namesToLoad.forEach(function (uid) {

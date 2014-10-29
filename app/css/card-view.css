@@ -34,6 +34,10 @@
 	font-size: 14px;
 }
 
+#card-view .card .content p {
+	margin: 6px 0;
+}
+
 #card-view .card  .content tt {
 	display: inline-block;
 	vertical-align: baseline;
@@ -96,12 +100,31 @@
 .card.followup .thread:not(:last-child) {
 	padding-bottom: 16px;
 	border-bottom: 1px solid #ddd;
-	margin-bottom: 24px;
+	margin-bottom: 18px;
 }
 
 .card.followup .thread .feedback {
 	margin: 12px 0;
-	padding: 1px 20px;
+	padding: 1px 20px 10px 20px;
 	border-left: 3px solid #eee;
 	background: #fafafa;
+}
+
+/* FOLLOWUP THREAD META */
+.card.followup .thread .meta {
+	margin-bottom: -4px;
+}
+
+.card.followup .thread .feedback .meta {
+	margin-top: 11px;
+}
+.card.followup .thread .meta .author {
+	color: #888;
+	font-size: 12px;
+}
+
+.card.followup .thread .meta .time {
+	margin-left: 6px;
+	color: #ccc;
+	font-size: 12px;
 }

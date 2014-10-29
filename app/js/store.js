@@ -120,7 +120,7 @@ var Store = function (Store, undefined) {
 	}
 	Store.getUsers = function (userIds, course) {
 		return get('users', function (users, resolve, reject) {
-			var courseUsers = F.clone(users[course]);
+			var courseUsers = users ? F.clone(users[course]) : null;
 
 			if (courseUsers && userIds && userIds.length) {
 				// initially, we haven't found any users in the stored users

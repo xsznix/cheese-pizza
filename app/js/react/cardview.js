@@ -61,13 +61,25 @@ var FollowupThread = React.createClass({
 	},
 	render: function () {
 		var thread = this.props.thread,
-			feedback = thread.children;
+			feedback = thread.children,
+			name = this.props.getName;
 
 		return (
 			React.DOM.div({className: "thread"}, 
+				React.DOM.div({className: "meta"}, 
+					React.DOM.span({className: "author"}, name(thread)), 
+					React.DOM.span({className: "time"}, Dates.longRel(thread.created))
+				), 
 				React.DOM.div({className: "content", dangerouslySetInnerHTML: {__html: thread.subject}}), 
 				feedback.map(function (data) {
-					return React.DOM.div({className: "feedback content", dangerouslySetInnerHTML: {__html: data.subject}});
+					return (
+						React.DOM.div({key: data.id, className: "feedback"}, 
+							React.DOM.div({className: "meta"}, 
+								React.DOM.span({className: "author"}, name(data)), 
+								React.DOM.span({className: "time"}, Dates.longRel(data.created))
+							), 
+							React.DOM.div({className: "content", dangerouslySetInnerHTML: {__html: data.subject}})
+						));
 				})
 			))
 	}

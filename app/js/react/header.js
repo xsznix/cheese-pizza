@@ -12,10 +12,10 @@ var Header = React.createClass({
 	},
 	render: function () {
 		return (
-			React.DOM.div({id: "header"}, 
-				React.DOM.div({id: "app-title"}, "Cheese Pizza"), 
-				React.DOM.div({id: "header-actions"}, 
-					React.DOM.a({href: "#", onClick: this.handleRefreshClick}, "Refresh")
+			React.createElement("div", {id: "header"}, 
+				React.createElement("div", {id: "app-title"}, "Cheese Pizza"), 
+				React.createElement("div", {id: "header-actions"}, 
+					React.createElement("a", {href: "#", onClick: this.handleRefreshClick}, "Refresh")
 				)
 			));
 	}

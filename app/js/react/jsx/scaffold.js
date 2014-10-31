@@ -26,7 +26,7 @@ var Scaffold = React.createClass({
 	},
 	componentWillReceiveProps: function (props) {
 		this.setState({
-			filteredCards: this.filterCards(undefined, undefined, undefined, props)
+			filteredCards: this.filterCards(undefined, undefined, undefined, props),
 		});
 	},
 
@@ -120,7 +120,7 @@ var Scaffold = React.createClass({
 				setState({
 					selectedCardData: result
 				});
-			_this.props.doMarkAsRead(result, card, _this.state.selectedCourse.id);
+			_this.props.doMarkAsRead(result, card, _this.state.selectedCourse.id, _this);
 		});
 	},
 	handleLoadNames: function (uids) {

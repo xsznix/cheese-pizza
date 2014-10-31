@@ -26,7 +26,7 @@ var Scaffold = React.createClass({
 	},
 	componentWillReceiveProps: function (props) {
 		this.setState({
-			filteredCards: this.filterCards(undefined, undefined, undefined, props)
+			filteredCards: this.filterCards(undefined, undefined, undefined, props),
 		});
 	},
 
@@ -120,7 +120,7 @@ var Scaffold = React.createClass({
 				setState({
 					selectedCardData: result
 				});
-			_this.props.doMarkAsRead(result, card, _this.state.selectedCourse.id);
+			_this.props.doMarkAsRead(result, card, _this.state.selectedCourse.id, _this);
 		});
 	},
 	handleLoadNames: function (uids) {
@@ -131,11 +131,11 @@ var Scaffold = React.createClass({
 		var namesInCourse = this.props.names[this.state.selectedCourse.id] || {};
 
 		return (
-			React.DOM.div({id: "wrapper"}, 
-				Header({course: this.state.selectedCourse, 
+			React.createElement("div", {id: "wrapper"}, 
+				React.createElement(Header, {course: this.state.selectedCourse, 
 				        doRefresh: this.props.doRefresh}), 
-				React.DOM.div({id: "content"}, 
-					Sidebar({user: this.props.user, 
+				React.createElement("div", {id: "content"}, 
+					React.createElement(Sidebar, {user: this.props.user, 
 					         selectedCourse: this.state.selectedCourse, 
 					         selectedFilter: this.state.selectedFilter, 
 					         selectedFolder: this.state.selectedFolder, 
@@ -144,10 +144,10 @@ var Scaffold = React.createClass({
 					         handleSelectFilter: this.handleSelectFilter, 
 					         handleSelectFolder: this.handleSelectFolder, 
 					         handleSelectOption: this.handleSelectOption}), 
-					List({cards: this.state.filteredCards, 
+					React.createElement(List, {cards: this.state.filteredCards, 
 					      selectedCard: this.state.selectedCard, 
 					      handleSelectCard: this.handleSelectCard}), 
-					CardView({card: this.state.selectedCardData, 
+					React.createElement(CardView, {card: this.state.selectedCardData, 
 					          names: namesInCourse, 
 					          doLoadNames: this.handleLoadNames, 
 					          doMarkAsRead: this.props.doMarkAsRead})

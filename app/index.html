@@ -6,7 +6,7 @@
 
 	<link rel="stylesheet" href="css/vendor/font-awesome.css">
 	<link rel="stylesheet" href="css/vendor/codemirror.css">
-	<link rel="stylesheet" href="css/vendor/hljs/xcode.css">
+	<link rel="stylesheet" href="css/vendor/hljs/github.css">
 	<link rel="stylesheet" href="css/open-sans.css">
 
 	<link rel="stylesheet" href="css/index.css">
@@ -18,12 +18,14 @@
 	<link rel="stylesheet" href="css/card-view.css">
 </head>
 <body>
-	<div class="wrapper">
-		<div id="header"></div>
-		<div id="content">
-			<div id="sidebar"></div>
-			<div id="list"></div>
-			<div id="card-view"></div>
+	<div id="root">
+		<div class="wrapper">
+			<div id="header"></div>
+			<div id="content">
+				<div id="sidebar"></div>
+				<div id="list"></div>
+				<div id="card-view"></div>
+			</div>
 		</div>
 	</div>
 
@@ -32,6 +34,8 @@
 	<script src="js/vendor/react.js"></script>
 	<script src="js/vendor/highlight.js"></script>
 	<script src="js/vendor/codemirror.js"></script>
+	<script src="js/vendor/MathJax.js"></script>
+	<script src="js/vendor/config/TeX-AMS_HTML.js"></script>
 
 	<script src="js/f.js"></script>
 	<script src="js/p.js"></script>
@@ -42,6 +46,8 @@
 	<script src="js/react/header.js"></script>
 	<script src="js/react/sidebar.js"></script>
 	<script src="js/react/list.js"></script>
+	<script src="js/react/tex.js"></script>
+	<script src="js/react/content.js"></script>
 	<script src="js/react/cardview.js"></script>
 	<script src="js/react/scaffold.js"></script>
 

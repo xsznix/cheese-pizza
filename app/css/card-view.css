@@ -4,7 +4,7 @@
 
 #card-view .card {
 	width: 100%;
-	max-width: 640px;
+	max-width: 800px;
 	margin: 0 auto;
 	padding: 24px;
 
@@ -30,15 +30,17 @@
 
 /* CARD CONTENT */
 
-#card-view .card  .content {
+#card-view .card .content {
 	font-size: 14px;
+
+	-webkit-user-select: text;
 }
 
 #card-view .card .content p {
 	margin: 6px 0;
 }
 
-#card-view .card  .content tt {
+#card-view .card .content tt {
 	display: inline-block;
 	vertical-align: baseline;
 	padding: 0 2px;
@@ -46,15 +48,31 @@
 	background: #f4f4f4;
 	border: 1px solid #ddd;
 	border-radius: 2px;
+
+	font-family: monospace;
 }
 
-#card-view .card  .content pre {
+#card-view .card .content tt * {
+	font-family: monospace !important;
+}
+
+#card-view .card .content pre.plaintext {
+	font-family: 'Open Sans';
+	white-space: pre-wrap;
+}
+
+#card-view .card .content pre:not(.plaintext) {
 	display: block;
 	padding: 4px;
 	background: #f4f4f4;
 	border: 1px solid #ddd;
 	border-radius: 4px;
 	overflow: scroll;
+}
+
+#card-view .card .content pre:not(.plaintext),
+#card-view .card .content pre:not(.plaintext) * {
+	font-family: monospace;
 }
 
 /* CARD META */
@@ -94,6 +112,10 @@
 
 #card-view .card > .meta > .separator {
 	flex: 1 1;
+}
+
+#card-view .card > .meta > .endorsements i {
+	color: #2ecc71;
 }
 
 /* FOLLOWUP THREAD DELIMITERS */

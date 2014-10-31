@@ -50,48 +50,48 @@ var Sidebar = React.createClass({
 				}
 			};
 		return (
-			React.DOM.div({id: "sidebar"}, 
-				React.DOM.div({id: "account-info", className: "section"}, user.name), 
+			React.createElement("div", {id: "sidebar"}, 
+				React.createElement("div", {id: "account-info", className: "section"}, user.name), 
 
-				React.DOM.div({id: "courses", className: "section"}, 
-					React.DOM.h2(null, "Courses"), 
+				React.createElement("div", {id: "courses", className: "section"}, 
+					React.createElement("h2", null, "Courses"), 
 					user.networks.map(function (network) {
 						var classes = 'course clickable';
 						if (network.id === selectedCourse.id)
 							classes += ' selected';
 
-						return React.DOM.div({key: network.id, className: classes, onClick: selectCourse(network)}, 
-							React.DOM.div({className: "course-num"}, network.course_number), 
-							React.DOM.div({className: "course-name"}, network.name)
+						return React.createElement("div", {key: network.id, className: classes, onClick: selectCourse(network)}, 
+							React.createElement("div", {className: "course-num"}, network.course_number), 
+							React.createElement("div", {className: "course-name"}, network.name)
 							);
 					})
 				), 
 
-				React.DOM.div({id: "filters", className: "section"}, 
-					React.DOM.h2(null, "Filters"), 
+				React.createElement("div", {id: "filters", className: "section"}, 
+					React.createElement("h2", null, "Filters"), 
 					P.FILTERS.map(function (filter) {
 						var classes = 'filter clickable';
 						if (filter[1] === selectedFilter[1])
 							classes += ' selected';
 
-						return React.DOM.div({key: filter[1], className: classes, onClick: selectFilter(filter)}, filter[0]);
+						return React.createElement("div", {key: filter[1], className: classes, onClick: selectFilter(filter)}, filter[0]);
 					})
 				), 
 
-				React.DOM.div({id: "folders", className: "section"}, 
-					React.DOM.h2(null, "Folders"), 
-					React.DOM.div({className: "folder clickable" + (selectedFolder === '' ? ' selected' : ''), onClick: selectFolder('')}, "Show All"), 
+				React.createElement("div", {id: "folders", className: "section"}, 
+					React.createElement("h2", null, "Folders"), 
+					React.createElement("div", {className: "folder clickable" + (selectedFolder === '' ? ' selected' : ''), onClick: selectFolder('')}, "Show All"), 
 					selectedCourse.folders.map(function (folder) {
 						var classes = 'folder clickable';
 						if (folder === selectedFolder)
 							classes += ' selected';
 
-						return React.DOM.div({key: folder, className: classes, onClick: selectFolder(folder)}, folder)
+						return React.createElement("div", {key: folder, className: classes, onClick: selectFolder(folder)}, folder)
 					})
 				), 
 
-				React.DOM.div({id: "options", className: "section"}, 
-					React.DOM.h2(null, "Options")
+				React.createElement("div", {id: "options", className: "section"}, 
+					React.createElement("h2", null, "Options")
 				)
 			));
 	}

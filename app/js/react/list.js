@@ -31,25 +31,25 @@ var ListItem = React.createClass({
 		if (card.is_new)
 			classes.push('new');
 		if (card.no_answer_followup)
-			followup_div = React.DOM.div({className: "unresolved-count"}, card.no_answer_followup);
+			followup_div = React.createElement("div", {className: "unresolved-count"}, card.no_answer_followup);
 		if (card.main_version !== card.version)
-			unviewed_div = React.DOM.div({className: "unviewed-count"}, card.main_version - (card.version || 0));
+			unviewed_div = React.createElement("div", {className: "unviewed-count"}, card.main_version - (card.version || 0));
 		if (card.has_s)
-			s_div = React.DOM.div({className: "has-student-answer"}, "S");
+			s_div = React.createElement("div", {className: "has-student-answer"}, "S");
 		if (card.has_i)
-			i_div = React.DOM.div({className: "has-instructor-answer"}, "I");
+			i_div = React.createElement("div", {className: "has-instructor-answer"}, "I");
 		if (card.type === 'note')
-			note_div = React.DOM.div({className: "is-note fa fa-bars"});
+			note_div = React.createElement("div", {className: "is-note fa fa-bars"});
 
 		return (
-			React.DOM.div({className: classes.join(' '), onClick: selectThis}, 
-				React.DOM.div({className: "header"}, 
-					React.DOM.div({className: "title"}, card.subject), 
-					React.DOM.div({className: "time"}, Dates.shortRel(card.log[0].t))
+			React.createElement("div", {className: classes.join(' '), onClick: selectThis}, 
+				React.createElement("div", {className: "header"}, 
+					React.createElement("div", {className: "title"}, card.subject), 
+					React.createElement("div", {className: "time"}, Dates.shortRel(card.log[0].t))
 				), 
-				React.DOM.div({className: "content"}, 
-					React.DOM.div({className: "message", dangerouslySetInnerHTML: {__html: card.content_snipet}}), 
-					React.DOM.div({className: "meta"}, 
+				React.createElement("div", {className: "content"}, 
+					React.createElement("div", {className: "message", dangerouslySetInnerHTML: {__html: card.content_snipet}}), 
+					React.createElement("div", {className: "meta"}, 
 						unresolved_div, 
 						unviewed_div, 
 						followup_div, 
@@ -75,11 +75,11 @@ var Bucket = React.createClass({
 			handleSelectCard = this.props.handleSelectCard;
 
 		return (
-			React.DOM.div({className: "bucket"}, 
-				React.DOM.h2(null, bucket.name), 
+			React.createElement("div", {className: "bucket"}, 
+				React.createElement("h2", null, bucket.name), 
 				bucket.cards.map(function (card) {
 					var classes = ['item', card.type];
-					return ListItem({key: card.id, 
+					return React.createElement(ListItem, {key: card.id, 
 					                 card: card, 
 					                 selectedCard: selectedCard, 
 					                 handleSelectCard: handleSelectCard})
@@ -111,24 +111,29 @@ var List = React.createClass({
 		return buckets;
 	},
 
+	componentDidUpdate: function (prevProps, prevState) {
+		if (prevProps.cards !== this.props.cards)
+			this.refs.scrollRoot.getDOMNode().scrollTop = 0;
+	},
+
 	render: function () {
 		var buckets = this.putCardsInBuckets(this.props.cards),
 			selectedCard = this.props.selectedCard,
 			handleSelectCard = this.props.handleSelectCard;
 
 		return (
-			React.DOM.div({id: "list"}, 
+			React.createElement("div", {id: "list"}, 
 
-				React.DOM.div({id: "search"}, 
-					React.DOM.span({className: "fa fa-search"}), 
-					React.DOM.input({type: "text", id: "search-box", placeholder: "Search"})
+				React.createElement("div", {id: "search"}, 
+					React.createElement("span", {className: "fa fa-search"}), 
+					React.createElement("input", {type: "text", id: "search-box", placeholder: "Search"})
 				), 
 
-				React.DOM.div({id: "list-scroll"}, 
+				React.createElement("div", {id: "list-scroll", ref: "scrollRoot"}, 
 					buckets.map(function (bucket) {
 						if (!bucket) return null;
 						return (
-							Bucket({key: bucket.name, 
+							React.createElement(Bucket, {key: bucket.name, 
 							        bucket: bucket, 
 							        selectedCard: selectedCard, 
 							        handleSelectCard: handleSelectCard}));

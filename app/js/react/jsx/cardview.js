@@ -16,7 +16,7 @@ var OpCard = React.createClass({
 			<div className={classes}>
 				<h2>{q.subject}</h2>
 				<div className="author">{Dates.longRel(q.created)} by {name(q)}</div>
-				<div className="content" dangerouslySetInnerHTML={{__html: q.content}} />
+				<Content className="content" html={q.content} />
 				<hr />
 				<div className="meta">
 					<a href="#" className="edit">Edit</a>
@@ -37,18 +37,36 @@ var AnswerCard = React.createClass({
 		card: React.PropTypes.object.isRequired,
 		getName: React.PropTypes.func.isRequired
 	},
+	instructorEndorsers: function () {
+		return this.props.card.tag_endorse.filter(function (endorser) {
+			return endorser.admin;
+		});
+	},
 	render: function () {
 		var card = this.props.card,
 			name = this.props.getName,
 			classes = 'card answer ' + card.type,
 			title = card.type === 's_answer' ? 'The students\' answer' : 'The instructors\' answer', 
-			a = card.history[0];
+			a = card.history[0],
+			is_s_ans = card.type === 's_answer',
+			i_end = [];
+
+		if (is_s_ans)
+			i_end = this.instructorEndorsers();
 
 		return (
 			<div className={classes}>
 				<h2>{title}</h2>
 				<div className="author">{Dates.longRel(a.created)} by {name(a)}</div>
-				<div className="content" dangerouslySetInnerHTML={{__html: a.content}} />
+				<Content className="content" html={a.content} />
+				<hr />
+				<div className="meta">
+					{is_s_ans ? <a href="#" className="edit">Edit</a> : null}
+					<a href="#" className="thank">Thank</a>
+					<div className="separator" />
+					<div className="likes"><i className="fa fa-thumbs-up" />{card.tag_endorse.length}</div>
+					{i_end.length ? <div className="endorsements"><i className="fa fa-check" />{i_end.length}</div> : null}
+				</div>
 			</div>)
 	}
 });
@@ -70,7 +88,7 @@ var FollowupThread = React.createClass({
 					<span className="author">{name(thread)}</span>
 					<span className="time">{Dates.longRel(thread.created)}</span>
 				</div>
-				<div className="content" dangerouslySetInnerHTML={{__html: thread.subject}} />
+				<Content className="content" html={thread.subject} />
 				{feedback.map(function (data) {
 					return (
 						<div key={data.id} className="feedback">
@@ -78,7 +96,7 @@ var FollowupThread = React.createClass({
 								<span className="author">{name(data)}</span>
 								<span className="time">{Dates.longRel(data.created)}</span>
 							</div>
-							<div className="content" dangerouslySetInnerHTML={{__html: data.subject}} />
+							<Content className="content" html={data.subject} />
 						</div>);
 				})}
 			</div>)

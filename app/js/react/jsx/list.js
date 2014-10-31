@@ -111,6 +111,11 @@ var List = React.createClass({
 		return buckets;
 	},
 
+	componentDidUpdate: function (prevProps, prevState) {
+		if (prevProps.cards !== this.props.cards)
+			this.refs.scrollRoot.getDOMNode().scrollTop = 0;
+	},
+
 	render: function () {
 		var buckets = this.putCardsInBuckets(this.props.cards),
 			selectedCard = this.props.selectedCard,
@@ -124,7 +129,7 @@ var List = React.createClass({
 					<input type="text" id="search-box" placeholder="Search" />
 				</div>
 
-				<div id="list-scroll">
+				<div id="list-scroll" ref="scrollRoot">
 					{buckets.map(function (bucket) {
 						if (!bucket) return null;
 						return (

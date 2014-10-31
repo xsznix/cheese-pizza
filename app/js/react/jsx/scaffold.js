@@ -14,10 +14,22 @@ var Scaffold = React.createClass({
 		doLogout: React.PropTypes.func.isRequired
 	},
 	getInitialState: function () {
-		var activeCourse = this.props.user.last_network;
-		var selectedCourse = this.props.user.networks.filter(function (n) {
-			return n.id === activeCourse;
-		})[0];
+		var lastNetwork = this.props.user.last_network;
+		var activeCourses = [], inactiveCourses = [],
+			lastNetworkIsActive, selectedCourse;
+
+		// filter networks by activeness and find the last network
+		 this.props.user.networks.forEach(function (n) {
+		 	var active = n.status === 'active';
+
+			if (active) activeCourses.push(n);
+			else inactiveCourses.push(n);
+
+			if (n.id === lastNetwork) {
+				selectedCourse = n;
+				lastNetworkIsActive = active;
+			}
+		});
 
 		return {
 			selectedCourse: selectedCourse,
@@ -25,8 +37,11 @@ var Scaffold = React.createClass({
 			selectedFolder: '',
 			selectedCard: '',
 			selectedOption: '',
-			filteredCards: this.props.feeds[activeCourse].feed,
-			selectedCardData: null
+			filteredCards: this.props.feeds[lastNetwork].feed,
+			selectedCardData: null,
+			activeCourses: activeCourses,
+			inactiveCourses: inactiveCourses,
+			showInactiveCourses: !lastNetworkIsActive
 		}
 	},
 	componentWillReceiveProps: function (props) {
@@ -44,7 +59,7 @@ var Scaffold = React.createClass({
 		var selectedFolder = folder != undefined ? folder : this.state.selectedFolder;
 
 		// apply filter
-		if (selectedFilter === '') {} // noop; break
+		if (selectedFilter === '' || !cards.length) {} // noop; break
 		else if (selectedFilter === 'student')
 			cards = cards.filter(function (card) {
 				return card.tags.indexOf('student') !== -1;
@@ -132,6 +147,11 @@ var Scaffold = React.createClass({
 			_this.props.doMarkAsRead(result, card, _this.state.selectedCourse.id, _this);
 		});
 	},
+	handleToggleShowInactiveCourses: function (show) {
+		this.setState({
+			showInactiveCourses: show
+		});
+	},
 	handleLoadNames: function (uids) {
 		this.props.doLoadNames(uids, this.state.selectedCourse.id);
 	},
@@ -146,6 +166,9 @@ var Scaffold = React.createClass({
 				        doLogout={this.props.doLogout} />
 				<div id="content">
 					<Sidebar user={this.props.user}
+					         activeCourses={this.state.activeCourses}
+					         inactiveCourses={this.state.inactiveCourses}
+					         showInactiveCourses={this.state.showInactiveCourses}
 					         selectedCourse={this.state.selectedCourse}
 					         selectedFilter={this.state.selectedFilter}
 					         selectedFolder={this.state.selectedFolder}
@@ -153,7 +176,8 @@ var Scaffold = React.createClass({
 					         handleSelectCourse={this.handleSelectCourse}
 					         handleSelectFilter={this.handleSelectFilter}
 					         handleSelectFolder={this.handleSelectFolder}
-					         handleSelectOption={this.handleSelectOption} />
+					         handleSelectOption={this.handleSelectOption}
+					         handleToggleShowInactiveCourses={this.handleToggleShowInactiveCourses} />
 					<List cards={this.state.filteredCards}
 					      selectedCard={this.state.selectedCard}
 					      handleSelectCard={this.handleSelectCard} />

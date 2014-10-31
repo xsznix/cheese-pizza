@@ -15,17 +15,26 @@
 }
 
 #sidebar .clickable {
-	padding: 4px 12px;
+	padding: 2px 12px;
 
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: 300;
 
 	cursor: pointer;
 }
 
+#sidebar .course, #sidebar .option {
+	padding: 4px 12px;
+	font-size: 14px;
+}
+
 #sidebar .course .course-name {
-	font-size: 12px;
+	font-size: 10px;
 	font-weight: 400;
+}
+
+#sidebar .course.inactive {
+	color: #888;
 }
 
 #sidebar .clickable:hover, #sidebar .clickable.selected {
@@ -38,4 +47,17 @@
 
 #sidebar > :last-child {
 	margin-bottom: 16px;
+}
+
+#sidebar .toggle {
+	color: #bbb;
+	font-size: 12px;
+}
+
+#sidebar .toggle:hover {
+	background: rgba(255,255,255,0.0625)
+}
+
+#sidebar .toggle .toggle-icon {
+	margin-right: 6px;
 }

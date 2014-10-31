@@ -6,6 +6,10 @@ var Sidebar = React.createClass({
 	propTypes: {
 		user: React.PropTypes.object.isRequired,
 
+		activeCourses: React.PropTypes.array.isRequired,
+		inactiveCourses: React.PropTypes.array.isRequired,
+		showInactiveCourses: React.PropTypes.bool.isRequired,
+
 		selectedCourse: React.PropTypes.object,
 		selectedFilter: React.PropTypes.array,
 		selectedFolder: React.PropTypes.string,
@@ -14,10 +18,18 @@ var Sidebar = React.createClass({
 		handleSelectCourse: React.PropTypes.func.isRequired,
 		handleSelectFilter: React.PropTypes.func.isRequired,
 		handleSelectFolder: React.PropTypes.func.isRequired,
-		handleSelectOption: React.PropTypes.func.isRequired
+		handleSelectOption: React.PropTypes.func.isRequired,
+		handleToggleShowInactiveCourses: React.PropTypes.func.isRequired
 	},
 	render: function () {
 		var user = this.props.user,
+
+			activeCourses = this.props.activeCourses,
+			inactiveCourses = this.props.inactiveCourses,
+			showInactiveCourses = this.props.showInactiveCourses,
+
+			coursesToShow = showInactiveCourses ?
+				activeCourses.concat(inactiveCourses) : activeCourses,
 
 			selectedCourse = this.props.selectedCourse,
 			selectedFilter = this.props.selectedFilter,
@@ -28,6 +40,7 @@ var Sidebar = React.createClass({
 			handleSelectFilter = this.props.handleSelectFilter,
 			handleSelectFolder = this.props.handleSelectFolder,
 			handleSelectOption = this.props.handleSelectOption,
+			handleToggleShowInactive = this.props.handleToggleShowInactiveCourses,
 			
 			selectCourse = function (course) {
 				return function () {
@@ -48,23 +61,43 @@ var Sidebar = React.createClass({
 				return function () {
 					handleSelectOption(option);
 				}
+			},
+			showInactive = function () {
+				handleToggleShowInactive(!showInactiveCourses);
 			};
+
+		// classes for "Show inactive courses" toggle
+		var toggleClasses = 'clickable toggle',
+			toggleText;
+		if (this.props.showInactiveCourses) {
+			toggleClasses += ' on';
+			toggleText = 'Hide inactive';
+		} else {
+			toggleClasses += ' off';
+			toggleText = 'Show inactive';
+		}
+
 		return (
 			React.createElement("div", {id: "sidebar"}, 
 				React.createElement("div", {id: "account-info", className: "section"}, user.name), 
 
 				React.createElement("div", {id: "courses", className: "section"}, 
 					React.createElement("h2", null, "Courses"), 
-					user.networks.map(function (network) {
+					coursesToShow.map(function (network) {
 						var classes = 'course clickable';
 						if (network.id === selectedCourse.id)
 							classes += ' selected';
+						if (network.status !== 'active')
+							classes += ' inactive';
 
 						return React.createElement("div", {key: network.id, className: classes, onClick: selectCourse(network)}, 
 							React.createElement("div", {className: "course-num"}, network.course_number), 
 							React.createElement("div", {className: "course-name"}, network.name)
 							);
-					})
+					}), 
+					React.createElement("div", {id: "inactive-toggle", className: toggleClasses, onClick: showInactive}, 
+						toggleText
+					)
 				), 
 
 				React.createElement("div", {id: "filters", className: "section"}, 

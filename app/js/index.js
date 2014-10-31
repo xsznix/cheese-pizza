@@ -60,14 +60,14 @@ function doLoadNames (uids, nid) {
 	Store.getUsers(uids, nid).then(function (users) {
 		// don't do anything if everything is in Store already
 		if (users.notFound && users.notFound.length)
-			users.notFound.forEach(function (uid) {
-				loadingNames[uid] = true;
-			});
 			var namesToLoad = users.notFound.filter(function (uid) {
 				return !loadingNames[uid];
 			});
+			users.notFound.forEach(function (uid) {
+				loadingNames[uid] = true;
+			});
 			// don't send the request if we don't want to load any names
-			if (namesToLoad.length)
+			if (namesToLoad && namesToLoad.length)
 				P.getUsers(namesToLoad, nid).then(function (newUsers) {
 					var newUserHash = F.keyify(newUsers, 'id');
 					Store.setUsers(newUserHash, nid).then(function () {

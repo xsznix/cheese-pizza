@@ -79,6 +79,13 @@
 
 /* CARD META */
 
+#card-view .card > .approve {
+	color: #2ecc71;
+	text-align: center;
+	font-size: 12px;
+	font-weight: 600;
+}
+
 #card-view .card > hr {
 	margin-bottom: 12px;
 	border: 1px solid #ddd;

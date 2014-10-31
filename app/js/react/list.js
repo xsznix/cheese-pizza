@@ -44,7 +44,7 @@ var ListItem = React.createClass({
 		return (
 			React.createElement("div", {className: classes.join(' '), onClick: selectThis}, 
 				React.createElement("div", {className: "header"}, 
-					React.createElement("div", {className: "title"}, card.subject), 
+					React.createElement("div", {className: "title", dangerouslySetInnerHTML: {__html: card.subject}}), 
 					React.createElement("div", {className: "time"}, Dates.shortRel(card.log[0].t))
 				), 
 				React.createElement("div", {className: "content"}, 

@@ -44,11 +44,11 @@ var ListItem = React.createClass({
 		return (
 			<div className={classes.join(' ')} onClick={selectThis}>
 				<div className="header">
-					<div className="title">{card.subject}</div>
+					<div className="title" dangerouslySetInnerHTML={{__html: card.subject}} />
 					<div className="time">{Dates.shortRel(card.log[0].t)}</div>
 				</div>
 				<div className="content">
-					<div className="message" dangerouslySetInnerHTML={{__html: card.content_snipet}}></div>
+					<div className="message" dangerouslySetInnerHTML={{__html: card.content_snipet}} />
 					<div className="meta">
 						{unresolved_div}
 						{unviewed_div}

@@ -44,7 +44,7 @@
 
 			return (
 				React.createElement("div", {className: classes}, 
-					React.createElement("h2", null, q.subject), 
+					React.createElement("h2", {dangerouslySetInnerHTML: {__html: q.subject}}), 
 					React.createElement("div", {className: "author"}, Dates.longRel(q.created), " by ", name(q)), 
 					React.createElement(Content, {className: "content", html: q.content}), 
 					goodDiv, 

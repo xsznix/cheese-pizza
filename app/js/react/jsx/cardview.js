@@ -44,7 +44,7 @@
 
 			return (
 				<div className={classes}>
-					<h2>{q.subject}</h2>
+					<h2 dangerouslySetInnerHTML={{__html: q.subject}} />
 					<div className="author">{Dates.longRel(q.created)} by {name(q)}</div>
 					<Content className="content" html={q.content} />
 					{goodDiv}

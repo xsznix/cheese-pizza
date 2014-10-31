@@ -11,12 +11,12 @@
 }
 
 #sidebar {
-	width: 150px;
+	width: 175px;
 
 	background: #444;
 	color: #fff;
 
-	overflow: scroll;
+	overflow-y: auto;
 }
 
 #list {
@@ -30,5 +30,5 @@
 
 	background: #f4f4f4;
 
-	overflow: scroll;
+	overflow-y: auto;
 }

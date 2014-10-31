@@ -33,6 +33,7 @@
 #card-view .card .content {
 	font-size: 14px;
 
+	word-wrap: break-word; /* to prevent long words extending past card width */
 	-webkit-user-select: text;
 }
 
@@ -64,10 +65,11 @@
 #card-view .card .content pre:not(.plaintext) {
 	display: block;
 	padding: 4px;
-	background: #f4f4f4;
 	border: 1px solid #ddd;
 	border-radius: 4px;
-	overflow: scroll;
+	background: #f4f4f4;
+	overflow-x: auto;
+	word-wrap: normal;
 }
 
 #card-view .card .content pre:not(.plaintext),

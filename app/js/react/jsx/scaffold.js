@@ -10,12 +10,17 @@ var Scaffold = React.createClass({
 
 		doRefresh: React.PropTypes.func.isRequired,
 		doLoadNames: React.PropTypes.func.isRequired,
-		doMarkAsRead: React.PropTypes.func.isRequired
+		doMarkAsRead: React.PropTypes.func.isRequired,
+		doLogout: React.PropTypes.func.isRequired
 	},
 	getInitialState: function () {
 		var activeCourse = this.props.user.last_network;
+		var selectedCourse = this.props.user.networks.filter(function (n) {
+			return n.id === activeCourse;
+		})[0];
+
 		return {
-			selectedCourse: this.props.user.networks.filter(function (n) { return n.id === activeCourse})[0], // hack fixme
+			selectedCourse: selectedCourse,
 			selectedFilter: P.FILTERS[0],
 			selectedFolder: '',
 			selectedCard: '',
@@ -31,11 +36,12 @@ var Scaffold = React.createClass({
 	},
 
 	filterCards: function (course, filter, folder, props) {
-		var props = props != undefined ? props : this.props,
-			user = props.user,
-			cards = props.feeds[course != undefined ? course.id : this.state.selectedCourse.id].feed,
-			selectedFilter = filter != undefined ? filter[1] : this.state.selectedFilter[1],
-			selectedFolder = folder != undefined ? folder : this.state.selectedFolder;
+		var props = props != undefined ? props : this.props;
+		var user = props.user;
+		var courseId = course != undefined ? course.id : this.state.selectedCourse.id;
+		var cards = props.feeds[courseId] ? props.feeds[courseId].feed : [];
+		var selectedFilter = filter != undefined ? filter[1] : this.state.selectedFilter[1];
+		var selectedFolder = folder != undefined ? folder : this.state.selectedFolder;
 
 		// apply filter
 		if (selectedFilter === '') {} // noop; break
@@ -84,11 +90,14 @@ var Scaffold = React.createClass({
 
 	// event handlers
 	handleSelectCourse: function (course) {
+		var refresh = this.props.doRefresh;
 		this.setState({
 			selectedCourse: course,
 			filteredCards: this.filterCards(course),
 			selectedCard: '', // unshow card, to avoid course ambiguity problems
 			selectedCardData: null
+		}, function () {
+			refresh(course.id);
 		});
 	},
 	handleSelectFilter: function (filter) {
@@ -133,7 +142,8 @@ var Scaffold = React.createClass({
 		return (
 			<div id="wrapper">
 				<Header course={this.state.selectedCourse}
-				        doRefresh={this.props.doRefresh} />
+				        doRefresh={this.props.doRefresh}
+				        doLogout={this.props.doLogout} />
 				<div id="content">
 					<Sidebar user={this.props.user}
 					         selectedCourse={this.state.selectedCourse}

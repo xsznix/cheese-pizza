@@ -5,7 +5,8 @@ var Header = React.createClass({
 	displayName: 'Header',
 	propTypes: {
 		course: React.PropTypes.object.isRequired,
-		doRefresh: React.PropTypes.func.isRequired
+		doRefresh: React.PropTypes.func.isRequired,
+		doLogout: React.PropTypes.func.isRequired
 	},
 	handleRefreshClick: function (event) {
 		this.props.doRefresh(this.props.course.id);
@@ -16,6 +17,7 @@ var Header = React.createClass({
 				<div id="app-title">Cheese Pizza</div>
 				<div id="header-actions">
 					<a href="#" onClick={this.handleRefreshClick}>Refresh</a>
+					<a href="#" onClick={this.props.doLogout}>Logout</a>
 				</div>
 			</div>);
 	}

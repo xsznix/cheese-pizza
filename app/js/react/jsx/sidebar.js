@@ -81,13 +81,13 @@ var Sidebar = React.createClass({
 				<div id="folders" className="section">
 					<h2>Folders</h2>
 					<div className={"folder clickable" + (selectedFolder === '' ? ' selected' : '')} onClick={selectFolder('')}>Show All</div>
-					{selectedCourse.folders.map(function (folder) {
+					{selectedCourse.folders ? selectedCourse.folders.map(function (folder) {
 						var classes = 'folder clickable';
 						if (folder === selectedFolder)
 							classes += ' selected';
 
 						return <div key={folder} className={classes} onClick={selectFolder(folder)}>{folder}</div>
-					})}
+					}) : null}
 				</div>
 
 				<div id="options" className="section">

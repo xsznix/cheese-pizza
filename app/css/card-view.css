@@ -125,6 +125,12 @@
 	margin-bottom: 18px;
 }
 
+/* FOLLOWUP THREAD */
+.card.followup .thread.unresolved {
+	border-left: 3px solid #e74c3c;
+	padding-left: 12px;
+}
+
 .card.followup .thread .feedback {
 	margin: 12px 0;
 	padding: 1px 20px 10px 20px;

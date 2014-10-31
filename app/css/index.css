@@ -15,7 +15,7 @@ html, body {
 	height: 36px;
 }
 
-#outer-wrapper {
+#root {
 	position: absolute;
 	top: 0;
 	bottom: 0;

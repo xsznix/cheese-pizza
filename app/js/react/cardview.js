@@ -80,10 +80,14 @@ var FollowupThread = React.createClass({
 	render: function () {
 		var thread = this.props.thread,
 			feedback = thread.children,
-			name = this.props.getName;
+			name = this.props.getName,
+			classes = "thread";
+
+		if (thread.no_answer)
+			classes += " unresolved";
 
 		return (
-			React.createElement("div", {className: "thread"}, 
+			React.createElement("div", {className: classes}, 
 				React.createElement("div", {className: "meta"}, 
 					React.createElement("span", {className: "author"}, name(thread)), 
 					React.createElement("span", {className: "time"}, Dates.longRel(thread.created))

@@ -152,6 +152,19 @@ var Store = function (Store, undefined) {
 		})
 	}
 
+	Store.logout = function () {
+		return new Promise(function (resolve, reject) {
+			chrome.storage.local.clear(confirm);
+
+			function confirm () {
+				if (chrome.runtime.lastError)
+					reject(chrome.runtime.lastError);
+				else
+					resolve();
+			}
+		});
+	}
+
 	return Store;
 
 }(Store || {});

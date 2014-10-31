@@ -30,7 +30,8 @@ function renderDashboard () {
 					names: users || {},
 					doRefresh: doRefresh,
 					doLoadNames: doLoadNames,
-					doMarkAsRead: doMarkAsRead
+					doMarkAsRead: doMarkAsRead,
+					doLogout: doLogout
 				}), scaffoldContainer);
 			})
 		});
@@ -89,6 +90,12 @@ function doMarkAsRead (newContent, listItemContent, nid, rootComponent) {
 	newListItemContent.version = listItemContent.main_version;
 	newListItemContent.is_new = false;
 	Store.setFeedItem(nid, newContent.id, newListItemContent).then(renderDashboard);
+}
+
+function doLogout () {
+	Store.logout().then(function () {
+		P.logout().then(renderLogin);
+	});
 }
 
 Store.getLoginState().then(function (state) {

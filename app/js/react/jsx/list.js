@@ -111,8 +111,18 @@ var List = React.createClass({
 		return buckets;
 	},
 
+	isSameList: function (oldList, newList) {
+		if (oldList.length !== newList.length)
+			return false;
+
+		for (var i = 0, len = newList.length; i < len; i++)
+			if (oldList[i].id !== newList[i].id)
+				return false;
+
+		return true;
+	},
 	componentDidUpdate: function (prevProps, prevState) {
-		if (prevProps.cards !== this.props.cards)
+		if (!this.isSameList(prevProps.cards, this.props.cards))
 			this.refs.scrollRoot.getDOMNode().scrollTop = 0;
 	},
 

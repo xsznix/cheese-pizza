@@ -6,6 +6,7 @@
 }
 
 #header-actions {
+	display: flex;
 	margin: 0 4px;
 }
 

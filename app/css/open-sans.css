@@ -4,14 +4,14 @@
 	font-family: 'Open Sans';
 	font-style: normal;
 	font-weight: 300;
-	src: local('Open Sans'), url('chrome-extension://__MSG_@@extension_id__/fonts/opensans-light.ttf');
+	src: local('Open Sans'), url('chrome-extension://__MSG_@@extension_id__/app/fonts/opensans-light.ttf');
 }
 
 @font-face {
 	font-family: 'Open Sans';
 	font-style: italic;
 	font-weight: 300;
-	src: local('Open Sans'), url('chrome-extension://__MSG_@@extension_id__/fonts/opensans-lightitalic.ttf');
+	src: local('Open Sans'), url('chrome-extension://__MSG_@@extension_id__/app/fonts/opensans-lightitalic.ttf');
 }
 
 /* 400 */
@@ -20,14 +20,14 @@
 	font-family: 'Open Sans';
 	font-style: normal;
 	font-weight: 400;
-	src: local('Open Sans'), url('chrome-extension://__MSG_@@extension_id__/fonts/opensans-regular.ttf');
+	src: local('Open Sans'), url('chrome-extension://__MSG_@@extension_id__/app/fonts/opensans-regular.ttf');
 }
 
 @font-face {
 	font-family: 'Open Sans';
 	font-style: italic;
 	font-weight: 400;
-	src: local('Open Sans'), url('chrome-extension://__MSG_@@extension_id__/fonts/opensans-italic.ttf');
+	src: local('Open Sans'), url('chrome-extension://__MSG_@@extension_id__/app/fonts/opensans-italic.ttf');
 }
 
 /* 600 */
@@ -36,14 +36,14 @@
 	font-family: 'Open Sans';
 	font-style: normal;
 	font-weight: 600;
-	src: local('Open Sans'), url('chrome-extension://__MSG_@@extension_id__/fonts/opensans-semibold.ttf');
+	src: local('Open Sans'), url('chrome-extension://__MSG_@@extension_id__/app/fonts/opensans-semibold.ttf');
 }
 
 @font-face {
 	font-family: 'Open Sans';
 	font-style: italic;
 	font-weight: 600;
-	src: local('Open Sans'), url('chrome-extension://__MSG_@@extension_id__/fonts/opensans-semibolditalic.ttf');
+	src: local('Open Sans'), url('chrome-extension://__MSG_@@extension_id__/app/fonts/opensans-semibolditalic.ttf');
 }
 
 /* 700 */
@@ -52,14 +52,14 @@
 	font-family: 'Open Sans';
 	font-style: normal;
 	font-weight: 700;
-	src: local('Open Sans'), url('chrome-extension://__MSG_@@extension_id__/fonts/opensans-bold.ttf');
+	src: local('Open Sans'), url('chrome-extension://__MSG_@@extension_id__/app/fonts/opensans-bold.ttf');
 }
 
 @font-face {
 	font-family: 'Open Sans';
 	font-style: italic;
 	font-weight: 700;
-	src: local('Open Sans'), url('chrome-extension://__MSG_@@extension_id__/fonts/opensans-bolditalic.ttf');
+	src: local('Open Sans'), url('chrome-extension://__MSG_@@extension_id__/app/fonts/opensans-bolditalic.ttf');
 }
 
 /* 800 */
@@ -68,12 +68,12 @@
 	font-family: 'Open Sans';
 	font-style: normal;
 	font-weight: 800;
-	src: local('Open Sans'), url('chrome-extension://__MSG_@@extension_id__/fonts/opensans-extrabold.ttf');
+	src: local('Open Sans'), url('chrome-extension://__MSG_@@extension_id__/app/fonts/opensans-extrabold.ttf');
 }
 
 @font-face {
 	font-family: 'Open Sans';
 	font-style: italic;
 	font-weight: 800;
-	src: local('Open Sans'), url('chrome-extension://__MSG_@@extension_id__/fonts/opensans-extrabolditalic.ttf');
+	src: local('Open Sans'), url('chrome-extension://__MSG_@@extension_id__/app/fonts/opensans-extrabolditalic.ttf');
 }

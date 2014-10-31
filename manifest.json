@@ -1,8 +1,12 @@
 {
 	"name": "Cheese Pizza (alpha)",
-	"version": "0.1.1",
+	"short_name": "Cheese Pizza",
+	"version": "0.1.2",
 	"manifest_version": 2,
 	"description": "An alternative class discussion viewer.",
+	"icons": {
+		"256": "app/img/logo-256.png"
+	},
 	"app": {
 		"background": {
 			"scripts": [

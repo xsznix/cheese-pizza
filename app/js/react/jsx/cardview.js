@@ -2,8 +2,7 @@
 'use strict';
 
 (function () {
-	function listNames (arr) {
-		var names = arr.map(function (a) { return a.name; });
+	function listNames (names) {
 		switch (names.length) {
 			case 1:
 				return names[0];
@@ -16,7 +15,8 @@
 	}
 
 	function approves (arr) {
-		return listNames(arr) + (arr.length === 1 ? ' approves.' : ' approve.');
+		var names = arr.map(function (a) { return a.name; });
+		return listNames(names) + (arr.length === 1 ? ' approves.' : ' approve.');
 	}
 
 	function instEndorsers (arr) {
@@ -25,15 +25,40 @@
 		});
 	}
 
+	function getAuthorData (history) {
+		var seen = {}, hasStudAnon = false, hasFullAnon = false;
+
+		// array reversal is destructive in JS, so make a copy of the array
+		return Array.apply(null, history).reverse().filter(function (item) {
+			if (item.anon === 'no') {
+				if (seen[item.uid])
+					return false;
+				else
+					return seen[item.uid] = true;
+			} else if (item.anon === 'stud') {
+				if (hasStudAnon)
+					return false;
+				else
+					return hasStudAnon = true;
+			} else {
+				if (hasFullAnon)
+					return false;
+				else
+					return hasFullAnon = true;
+			}
+		});
+	}
+
 	window.OpCard = React.createClass({
 		displayName: 'OpCard',
 		propTypes: {
 			card: React.PropTypes.object.isRequired,
-			getName: React.PropTypes.func.isRequired
+			getName: React.PropTypes.func.isRequired,
+			getNames: React.PropTypes.func.isRequired
 		},
 		render: function () {
 			var card = this.props.card,
-				name = this.props.getName,
+				names = this.props.getNames,
 				classes = 'card op ' + card.type,
 				q = card.history[0],
 				goodDiv = null,
@@ -45,7 +70,7 @@
 			return (
 				<div className={classes}>
 					<h2 dangerouslySetInnerHTML={{__html: q.subject}} />
-					<div className="author">{Dates.longRel(q.created)} by {name(q)}</div>
+					<div className="author">{Dates.longRel(q.created)} by {listNames(names(getAuthorData(card.history)))}</div>
 					<Content className="content" html={q.content} />
 					{goodDiv}
 					<hr />
@@ -66,12 +91,13 @@
 		displayName: 'AnswerCard',
 		propTypes: {
 			card: React.PropTypes.object.isRequired,
-			getName: React.PropTypes.func.isRequired
+			getName: React.PropTypes.func.isRequired,
+			getNames: React.PropTypes.func.isRequired
 		},
 		
 		render: function () {
 			var card = this.props.card,
-				name = this.props.getName,
+				names = this.props.getNames,
 				classes = 'card answer ' + card.type,
 				title = card.type === 's_answer' ? 'The students\' answer' : 'The instructors\' answer', 
 				a = card.history[0],
@@ -93,7 +119,7 @@
 			return (
 				<div className={classes}>
 					<h2>{title}</h2>
-					<div className="author">{Dates.longRel(a.created)} by {name(a)}</div>
+					<div className="author">{Dates.longRel(a.created)} by {listNames(names(getAuthorData(card.history)))}</div>
 					<Content className="content" html={a.content} />
 					{goodDiv}
 					<hr />
@@ -216,6 +242,12 @@
 			else
 				return 'Anonymous';
 		},
+		safeGetNames: function (data) {
+			var len = data.length, result = [];
+			for (var i = 0; i < len; i++) // avoid Arary.map being weird with scoping
+				result.push(this.safeGetName(data[i]));
+			return result;
+		},
 		componentDidUpdate: function (prevProps) {
 			// scroll to top on card load
 			if (this.props.card && (this.props.card !== prevProps.card))
@@ -236,15 +268,15 @@
 				followupCard = null;
 
 			if (children.s_ans)
-				s_ansCard = <AnswerCard card={children.s_ans} getName={this.safeGetName} />;
+				s_ansCard = <AnswerCard card={children.s_ans} getName={this.safeGetName} getNames={this.safeGetNames} />;
 			if (children.i_ans)
-				i_ansCard = <AnswerCard card={children.i_ans} getName={this.safeGetName} />;
+				i_ansCard = <AnswerCard card={children.i_ans} getName={this.safeGetName} getNames={this.safeGetNames} />;
 			if (children.followups.length)
 				followupCard = <FollowupCard threads={children.followups} getName={this.safeGetName} />;
 
 			return (
 				<div id="card-view" ref="card">
-					<OpCard card={card} getName={this.safeGetName} />
+					<OpCard card={card} getName={this.safeGetName} getNames={this.safeGetNames} />
 					{s_ansCard}
 					{i_ansCard}
 					{followupCard}

@@ -7,8 +7,15 @@ var Code = React.createClass({
 		data: React.PropTypes.string.isRequired
 	},
 
-	componentDidMount: function () {
+	highlight: function () {
 		hljs.highlightBlock(this.refs.main.getDOMNode());
+	},
+
+	componentDidMount: function () {
+		this.highlight();
+	},
+	componentDidUpdate: function () {
+		this.highlight();
 	},
 
 	render: function () {

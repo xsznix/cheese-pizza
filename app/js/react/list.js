@@ -35,7 +35,7 @@ var ListItem = React.createClass({
 		if (card.main_version !== card.version)
 			unviewed_div = React.createElement("div", {className: "unviewed-count"}, card.main_version - (card.version || 0));
 		if (card.has_s)
-			s_div = (card.gd_a ?
+			s_div = (card.tag_endorse_prof ?
 				React.createElement("div", {className: "has-student-answer"}, React.createElement("i", {className: "endorsed fa fa-check"}), "S") :
 				React.createElement("div", {className: "has-student-answer"}, "S"));
 		if (card.has_i)

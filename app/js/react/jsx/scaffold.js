@@ -38,79 +38,116 @@ var Scaffold = React.createClass({
 			selectedCard: '',
 			selectedOption: '',
 			filteredCards: this.props.feeds[lastNetwork].feed,
+
 			selectedCardData: null,
+
 			activeCourses: activeCourses,
 			inactiveCourses: inactiveCourses,
-			showInactiveCourses: !lastNetworkIsActive
+			showInactiveCourses: !lastNetworkIsActive,
+
+			activeFeed: this.props.feeds[lastNetwork].feed,
+			numItemsLoaded: P.DEFAULT_NUM_FEED_ITEMS
 		}
 	},
 	componentWillReceiveProps: function (props) {
+		var newFeed = props.feeds[this.state.selectedCourse.id].feed;
 		this.setState({
-			filteredCards: this.filterCards(undefined, undefined, undefined, props),
+			filteredCards: this.filterCards({feed: newFeed}),
+			activeFeed: newFeed,
+			numItemsLoaded: newFeed.length
 		});
 	},
 
-	filterCards: function (course, filter, folder, props) {
-		var props = props != undefined ? props : this.props;
-		var user = props.user;
-		var courseId = course != undefined ? course.id : this.state.selectedCourse.id;
-		var cards = props.feeds[courseId] ? props.feeds[courseId].feed : [];
-		var selectedFilter = filter != undefined ? filter[1] : this.state.selectedFilter[1];
-		var selectedFolder = folder != undefined ? folder : this.state.selectedFolder;
+	filterCards: function (options) {
+		var props, user, courseId, feed, filter, folder;
+
+		// read options
+		if (options.props == undefined)
+			props = this.props;
+		else
+			props = options.props;
+
+		if (options.user == undefined)
+			user = props.user;
+		else
+			user = options.user;
+
+		if (options.feed)
+			feed = options.feed;
+		else if (options.course)
+			if (props.feeds[options.course.id])
+				feed = props.feeds[options.course.id].feed;
+			else
+				feed = [];
+		else
+			feed = this.state.activeFeed;
+
+		if (options.filter == undefined)
+			filter = this.state.selectedFilter[1];
+		else
+			filter = options.filter[1];
+
+		if (options.folder == undefined)
+			folder = this.state.selectedFolder;
+		else
+			folder = options.folder;
 
 		// apply filter
-		if (selectedFilter === '' || !cards.length) {} // noop; break
-		else if (selectedFilter === 'student')
-			cards = cards.filter(function (card) {
+		if (filter === '' || !feed.length) {} // noop; break
+		else if (filter === 'student')
+			feed = feed.filter(function (card) {
 				return card.tags.indexOf('student') !== -1;
 			});
-		else if (selectedFilter === 'instructor')
-			cards = cards.filter(function (card) {
+		else if (filter === 'instructor')
+			feed = feed.filter(function (card) {
 				return card.tags.indexOf('instructor-note') !== -1 ||
 				       card.tags.indexOf('instructor-question') !== -1;
 			});
-		else if (selectedFilter === 'question' || selectedFilter === 'note' || selectedFilter === 'poll')
-			cards = cards.filter(function (card) {
-				return selectedFilter === card.type;
+		else if (filter === 'question' || filter === 'note' || filter === 'poll')
+			feed = feed.filter(function (card) {
+				return filter === card.type;
 			});
-		else if (selectedFilter === 'unread')
-			cards = cards.filter(function (card) {
+		else if (filter === 'unread')
+			feed = feed.filter(function (card) {
 				return card.is_new;
 			});
-		else if (selectedFilter === 'unresolved')
-			cards = cards.filter(function (card) {
+		else if (filter === 'unresolved')
+			feed = feed.filter(function (card) {
 				return !!card.no_answer_followup;
 			});
-		else if (selectedFilter === 'updated')
-			cards = cards.filter(function (card) {
+		else if (filter === 'updated')
+			feed = feed.filter(function (card) {
 				return card.main_version !== card.version;
 			});
-		else if (selectedFilter === 'following')
-			cards = cards.filter(function (card) {
+		else if (filter === 'following')
+			feed = feed.filter(function (card) {
 				return true; // TODO
 			});
-		else if (selectedFilter === 'archived')
-			cards = cards.filter(function (card) {
+		else if (filter === 'archived')
+			feed = feed.filter(function (card) {
 				return false; // TODO
 			});
 
 		// apply folder
-		if (selectedFolder !== '')
-			cards = cards.filter(function (card) {
-				return card.folders.indexOf(selectedFolder) !== -1;
+		if (folder !== '')
+			feed = feed.filter(function (card) {
+				return card.folders.indexOf(folder) !== -1;
 			});
 
-		return cards;
+		return feed;
 	},
 
 	// event handlers
 	handleSelectCourse: function (course) {
-		var refresh = this.props.doRefresh;
+		var refresh = this.props.doRefresh,
+			newFeed = this.props.feeds[course.id].feed;
 		this.setState({
 			selectedCourse: course,
-			filteredCards: this.filterCards(course),
+			filteredCards: this.filterCards({course: course}),
 			selectedCard: '', // unshow card, to avoid course ambiguity problems
-			selectedCardData: null
+			selectedCardData: null,
+			activeFeed: newFeed,
+			numItemsLoaded: newFeed.length
 		}, function () {
 			refresh(course.id);
 		});
@@ -118,13 +155,13 @@ var Scaffold = React.createClass({
 	handleSelectFilter: function (filter) {
 		this.setState({
 			selectedFilter: filter,
-			filteredCards: this.filterCards(undefined, filter)
+			filteredCards: this.filterCards({filter: filter})
 		});
 	},
 	handleSelectFolder: function (folder) {
 		this.setState({
 			selectedFolder: folder,
-			filteredCards: this.filterCards(undefined, undefined, folder)
+			filteredCards: this.filterCards({folder: folder})
 		});
 	},
 	handleSelectOption: function (option) {
@@ -155,6 +192,45 @@ var Scaffold = React.createClass({
 	handleLoadNames: function (uids) {
 		this.props.doLoadNames(uids, this.state.selectedCourse.id);
 	},
+	handleLoadMore: function (loadAll) {
+		var setState = this.setState.bind(this),
+			_this = this,
+			currNid = this.state.selectedCourse.id,
+			numToLoad = (loadAll ? 1000000 : this.state.numItemsLoaded + P.DEFAULT_NUM_FEED_ITEMS);
+
+		P.getFeed(currNid, 0, numToLoad).then(function (result) {
+			if (_this.state.selectedCourse.id === currNid) {
+				setState({
+					activeFeed: result.feed,
+					numItemsLoaded: numToLoad,
+					filteredCards: _this.filterCards({feed: result.feed})
+				});
+			}
+		});
+	},
+	handleSearch: function (query) {
+		var setState = this.setState.bind(this),
+			_this = this,
+			currNid = this.state.selectedCourse.id;
+
+		P.search(currNid, query).then(function (result) {
+			if (_this.state.selectedCourse.id === currNid) {
+				setState({
+					filteredCards: result,
+					activeFeed: result,
+					numItemsLoaded: 0
+				});
+			}
+		});
+	},
+	handleUnsearch: function (query) {
+		var newFeed = this.props.feeds[this.state.selectedCourse.id].feed;
+		this.setState({
+			filteredCards: newFeed,
+			activeFeed: newFeed,
+			numItemsLoaded: newFeed.length
+		});
+	},
 
 	render: function () {
 		var namesInCourse = this.props.names[this.state.selectedCourse.id] || {};
@@ -180,7 +256,10 @@ var Scaffold = React.createClass({
 					         handleToggleShowInactiveCourses={this.handleToggleShowInactiveCourses} />
 					<List cards={this.state.filteredCards}
 					      selectedCard={this.state.selectedCard}
-					      handleSelectCard={this.handleSelectCard} />
+					      handleSelectCard={this.handleSelectCard}
+					      handleLoadMore={this.handleLoadMore}
+					      handleSearch={this.handleSearch}
+					      handleUnsearch={this.handleUnsearch} />
 					<CardView card={this.state.selectedCardData}
 					          names={namesInCourse}
 					          doLoadNames={this.handleLoadNames}

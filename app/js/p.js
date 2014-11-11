@@ -7,6 +7,7 @@ var P = (function (P, undefined) {
 		URL_LOGIN = 'https://piazza.com/class',
 		API_LOGOUT = 'user.logout',
 		API_FEED = 'network.get_my_feed',
+		API_SEARCH = 'network.search',
 		API_CONTENT = 'content.get',
 		API_USER_STATUS = 'user.status',
 		API_GET_USERS = 'network.get_users';
@@ -14,6 +15,15 @@ var P = (function (P, undefined) {
 	function aid () {
 		return (new Date()).getTime().toString(36) +
 			Math.round(Math.random() * 1679616).toString(36);
+	}
+
+	function sid (q) {
+		q = (new Date()).getTime().toString() + q;
+		var hash = 0, i, len = q.length;
+		if (len === 0) return hash;
+		for (i = 0; i < len; i++)
+			hash = ((hash << 5) - hash) + q.charCodeAt(i) | 0;
+		return hash;
 	}
 
 	function api (method) {
@@ -70,7 +80,7 @@ var P = (function (P, undefined) {
 
 	P.getFeed = function (course, offset, limit, sort) {
 		offset = offset || 0;
-		limit = limit || 150;
+		limit = limit || P.DEFAULT_NUM_FEED_ITEMS;
 		sort = sort || 'updated';
 
 		return apiCall(API_FEED, {
@@ -78,6 +88,14 @@ var P = (function (P, undefined) {
 			offset: offset,
 			limit: limit,
 			sort: sort
+		});
+	}
+
+	P.search = function (course, query) {
+		return apiCall(API_SEARCH, {
+			nid: course,
+			query: query,
+			sid: sid(query)
 		});
 	}
 
@@ -111,7 +129,9 @@ var P = (function (P, undefined) {
 		['Unresolved', 'unresolved'],
 		['Updated', 'updated'],
 		['Following', 'following'],
-		['Archived', 'archived']]
+		['Archived', 'archived']];
+
+	P.DEFAULT_NUM_FEED_ITEMS = 150;
 
 	return P;
 

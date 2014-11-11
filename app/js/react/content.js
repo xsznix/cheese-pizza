@@ -87,7 +87,7 @@ var Content = React.createClass({
 	},
 	makeContent: function () {
 		var html = $.parseHTML(this.props.html), prepNode = this.prepareNode.bind(this);
-		if (html.length === 1 && html[0].nodeType === 3)
+		if (html.length === 1 && html[0].nodeType === 3 && !this.props.forceRich)
 			return React.createElement("pre", {className: "plaintext"}, this.prepareTextNode(html[0]))
 		return html.map(function (node, i, arr) {
 			return prepNode(node, i, arr, true);

@@ -45,17 +45,21 @@ var Scaffold = React.createClass({
 			inactiveCourses: inactiveCourses,
 			showInactiveCourses: !lastNetworkIsActive,
 
+			searchMode: false,
+
 			activeFeed: this.props.feeds[lastNetwork].feed,
 			numItemsLoaded: P.DEFAULT_NUM_FEED_ITEMS
 		}
 	},
 	componentWillReceiveProps: function (props) {
-		var newFeed = props.feeds[this.state.selectedCourse.id].feed;
-		this.setState({
-			filteredCards: this.filterCards({feed: newFeed}),
-			activeFeed: newFeed,
-			numItemsLoaded: newFeed.length
-		});
+		if (!this.state.searchMode) {
+			var newFeed = props.feeds[this.state.selectedCourse.id].feed;
+			this.setState({
+				filteredCards: this.filterCards({feed: newFeed}),
+				activeFeed: newFeed,
+				numItemsLoaded: newFeed.length
+			});
+		}
 	},
 
 	filterCards: function (options) {
@@ -218,7 +222,8 @@ var Scaffold = React.createClass({
 				setState({
 					filteredCards: result,
 					activeFeed: result,
-					numItemsLoaded: 0
+					numItemsLoaded: 0,
+					searchMode: true
 				});
 			}
 		});
@@ -228,7 +233,8 @@ var Scaffold = React.createClass({
 		this.setState({
 			filteredCards: newFeed,
 			activeFeed: newFeed,
-			numItemsLoaded: newFeed.length
+			numItemsLoaded: newFeed.length,
+			searchMode: false
 		});
 	},
 

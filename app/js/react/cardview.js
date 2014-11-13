@@ -65,11 +65,14 @@
 			getName: React.PropTypes.func.isRequired,
 			getNames: React.PropTypes.func.isRequired
 		},
-		getInitialState: function () {
+		initStateWithProps: function (props) {
 			return {
-				numThanks: this.props.card.tag_good.length,
-				userThanked: userIsInArray(this.props.user.id, this.props.card.tag_good)
+				numThanks: props.card.tag_good.length,
+				userThanked: userIsInArray(props.user.id, props.card.tag_good)
 			}
+		},
+		getInitialState: function () {
+			return this.initStateWithProps(this.props);
 		},
 
 		thank: function () {
@@ -99,6 +102,11 @@
 				this.unthank();
 			else
 				this.thank();
+		},
+
+		componentWillReceiveProps: function (nextProps) {
+			if (this.props.card.id !== nextProps.card.id)
+				this.setState(this.initStateWithProps(nextProps));
 		},
 
 		render: function () {
@@ -143,11 +151,14 @@
 			getName: React.PropTypes.func.isRequired,
 			getNames: React.PropTypes.func.isRequired
 		},
-		getInitialState: function () {
+		initStateWithProps: function (props) {
 			return {
-				numThanks: this.props.card.tag_endorse.length,
-				userThanked: userIsInArray(this.props.user.id, this.props.card.tag_endorse)
+				numThanks: props.card.tag_endorse.length,
+				userThanked: userIsInArray(props.user.id, props.card.tag_endorse)
 			}
+		},
+		getInitialState: function () {
+			return this.initStateWithProps(this.props);
 		},
 
 		thank: function () {
@@ -177,6 +188,11 @@
 				this.unthank();
 			else
 				this.thank();
+		},
+
+		componentWillReceiveProps: function (nextProps) {
+			if (this.props.card.id !== nextProps.card.id)
+				this.setState(this.initStateWithProps(nextProps));
 		},
 		
 		render: function () {

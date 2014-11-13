@@ -85,6 +85,10 @@
 	text-overflow: ellipsis;
 }
 
+#list-scroll.searching .item .header .title {
+	white-space: normal;
+}
+
 #list .item .header .time {
 	margin-top: 2px;
 	color: #999;

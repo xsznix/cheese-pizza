@@ -7,6 +7,7 @@ var P = (function (P, undefined) {
 		URL_LOGIN = 'https://piazza.com/class',
 		API_LOGOUT = 'user.logout',
 		API_FEED = 'network.get_my_feed',
+		API_FILTER_FEED = 'network.filter_feed',
 		API_SEARCH = 'network.search',
 		API_CONTENT = 'content.get',
 		API_USER_STATUS = 'user.status',
@@ -158,6 +159,22 @@ var P = (function (P, undefined) {
 	P.unfavorite = function (cid) {
 		return apiCall(API_UNFAVORITE, {
 			cid: cid
+		});
+	}
+
+	P.getArchived = function (nid, sort) {
+		return apiCall(API_FILTER_FEED, {
+			nid: nid,
+			sort: sort || 'updated',
+			hidden: 1
+		});
+	}
+
+	P.getFollowing = function (nid, sort) {
+		return apiCall(API_FILTER_FEED, {
+			nid: nid,
+			sort: sort || 'updated',
+			following: 1
 		});
 	}
 

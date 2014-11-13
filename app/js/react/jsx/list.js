@@ -123,7 +123,9 @@ var List = React.createClass({
 		handleSelectCard: React.PropTypes.func.isRequired,
 		handleLoadMore: React.PropTypes.func.isRequired,
 		handleSearch: React.PropTypes.func.isRequired,
-		handleUnsearch: React.PropTypes.func.isRequired
+		handleUnsearch: React.PropTypes.func.isRequired,
+		filterMode: React.PropTypes.bool.isRequired,
+		searchMode: React.PropTypes.bool.isRequired
 	},
 	getInitialState: function () {
 		return {
@@ -183,7 +185,11 @@ var List = React.createClass({
 			handleSelectCard = this.props.handleSelectCard,
 			handleLoadMore = this.props.handleLoadMore,
 			loadMore = function () { handleLoadMore(false) },
-			loadAll = function () { handleLoadMore(true) };
+			loadAll = function () { handleLoadMore(true) },
+			listClasses = '';
+
+		if (this.props.searchMode)
+			listClasses = 'searching';
 
 		return (
 			<div id="list">
@@ -195,7 +201,7 @@ var List = React.createClass({
 					{this.state.searchQuery.length ? <i className="fa fa-close" onClick={this.handleUnsearch} /> : null}
 				</div>
 
-				<div id="list-scroll" ref="scrollRoot">
+				<div id="list-scroll" className={listClasses} ref="scrollRoot">
 					{buckets.map(function (bucket) {
 						if (!bucket) return null;
 						return (
@@ -204,10 +210,10 @@ var List = React.createClass({
 							        selectedCard={selectedCard}
 							        handleSelectCard={handleSelectCard} />);
 					})}
-					<div className="load-actions">
+					{this.props.filterMode ? null : <div className="load-actions">
 						<div className="load-150" onClick={loadMore}>Load more</div>
 						<div className="load-all" onClick={loadAll}>Load all</div>
-					</div>
+					</div>}
 				</div>
 
 			</div>)

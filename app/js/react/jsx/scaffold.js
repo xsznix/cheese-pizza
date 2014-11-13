@@ -45,6 +45,7 @@ var Scaffold = React.createClass({
 			inactiveCourses: inactiveCourses,
 			showInactiveCourses: !lastNetworkIsActive,
 
+			filterMode: false,
 			searchMode: false,
 
 			activeFeed: this.props.feeds[lastNetwork].feed,
@@ -52,7 +53,7 @@ var Scaffold = React.createClass({
 		}
 	},
 	componentWillReceiveProps: function (props) {
-		if (!this.state.searchMode) {
+		if (!this.state.filterMode) {
 			var newFeed = props.feeds[this.state.selectedCourse.id].feed;
 			this.setState({
 				filteredCards: this.filterCards({feed: newFeed}),
@@ -123,14 +124,8 @@ var Scaffold = React.createClass({
 			feed = feed.filter(function (card) {
 				return card.main_version !== card.version;
 			});
-		else if (filter === 'following')
-			feed = feed.filter(function (card) {
-				return true; // TODO
-			});
-		else if (filter === 'archived')
-			feed = feed.filter(function (card) {
-				return false; // TODO
-			});
+		else if (filter === 'following') {}
+		else if (filter === 'archived') {}
 
 		// apply folder
 		if (folder !== '')
@@ -157,10 +152,37 @@ var Scaffold = React.createClass({
 		});
 	},
 	handleSelectFilter: function (filter) {
-		this.setState({
-			selectedFilter: filter,
-			filteredCards: this.filterCards({filter: filter})
-		});
+		var newState = { selectedFilter: filter };
+
+		if (this.state.filterMode) {
+			newState.filterMode = false;
+			newState.activeFeed = this.props.feeds[this.state.selectedCourse.id].feed;
+			newState.numItemsLoaded = newState.activeFeed.length;
+			newState.filteredCards = this.filterCards({
+				filter: filter,
+				feed: newState.activeFeed
+			});
+		} else {
+			newState.filteredCards = this.filterCards({filter: filter});
+		}
+
+		this.setState(newState);
+
+		// Archived and Following require a separate API call to laod their feeds
+		var setState = this.setState.bind(this);
+		var callback = function (result) {
+			setState({
+				activeFeed: result.feed,
+				filteredCards: result.feed,
+				numItemsLoaded: result.feed.length,
+				filterMode: true
+			});
+		}
+
+		if (filter[1] === 'following')
+			P.getFollowing(this.state.selectedCourse.id).then(callback);
+		else if (filter[1] === 'archived')
+			P.getArchived(this.state.selectedCourse.id).then(callback);
 	},
 	handleSelectFolder: function (folder) {
 		this.setState({
@@ -223,6 +245,7 @@ var Scaffold = React.createClass({
 					filteredCards: result,
 					activeFeed: result,
 					numItemsLoaded: 0,
+					filterMode: true,
 					searchMode: true
 				});
 			}
@@ -234,6 +257,7 @@ var Scaffold = React.createClass({
 			filteredCards: newFeed,
 			activeFeed: newFeed,
 			numItemsLoaded: newFeed.length,
+			filterMode: false,
 			searchMode: false
 		});
 	},
@@ -265,7 +289,9 @@ var Scaffold = React.createClass({
 					      handleSelectCard={this.handleSelectCard}
 					      handleLoadMore={this.handleLoadMore}
 					      handleSearch={this.handleSearch}
-					      handleUnsearch={this.handleUnsearch} />
+					      handleUnsearch={this.handleUnsearch}
+					      filterMode={this.state.filterMode}
+					      searchMode={this.state.searchMode} />
 					<CardView user={this.props.user}
 					          card={this.state.selectedCardData}
 					          names={namesInCourse}

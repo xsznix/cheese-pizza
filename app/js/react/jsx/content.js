@@ -101,12 +101,16 @@ var Content = React.createClass({
 		}
 	},
 	makeContent: function () {
-		var html = $.parseHTML(this.props.html), prepNode = this.prepareNode.bind(this);
+		var html = $.parseHTML(this.props.html);
 		if (html.length === 1 && html[0].nodeType === 3 && !this.props.forceRich)
 			return <pre className="plaintext">{this.prepareTextNode(html[0])}</pre>
-		return html.map(function (node, i, arr) {
-			return prepNode(node, i, arr, true);
-		});
+
+		var output = [];
+		for (var i = 0, len = html.length; i < len; i++) {
+			output.push(this.prepareNode(html[i], i, html, true));
+		}
+
+		return output;
 	},
 
 	shouldComponentUpdate: function (nextProps, nextState) {

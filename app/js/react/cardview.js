@@ -16,7 +16,7 @@
 
 	function approves (arr) {
 		var names = arr.map(function (a) { return a.name; });
-		return listNames(names) + (arr.length === 1 ? ' approves.' : ' approve.');
+		return '~*~ ' + listNames(names) + (arr.length === 1 ? ' approves' : ' approve') + ' ~*~';
 	}
 
 	function instEndorsers (arr) {

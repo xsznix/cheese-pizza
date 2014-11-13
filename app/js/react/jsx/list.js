@@ -174,6 +174,12 @@ var List = React.createClass({
 
 		return true;
 	},
+	componentWillReceiveProps: function (nextProps) {
+		if (this.state.searchQuery && !nextProps.searchMode)
+			this.setState({
+				searchQuery: ''
+			});
+	},
 	componentDidUpdate: function (prevProps, prevState) {
 		if (!this.isSameList(prevProps.cards, this.props.cards))
 			this.refs.scrollRoot.getDOMNode().scrollTop = 0;

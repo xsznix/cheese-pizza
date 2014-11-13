@@ -156,6 +156,7 @@ var Scaffold = React.createClass({
 
 		if (this.state.filterMode) {
 			newState.filterMode = false;
+			newState.searchMode = false;
 			newState.activeFeed = this.props.feeds[this.state.selectedCourse.id].feed;
 			newState.numItemsLoaded = newState.activeFeed.length;
 			newState.filteredCards = this.filterCards({
@@ -207,7 +208,8 @@ var Scaffold = React.createClass({
 				setState({
 					selectedCardData: result
 				});
-			_this.props.doMarkAsRead(result, card, _this.state.selectedCourse.id, _this);
+			if (!_this.state.searchMode) // search results return different list item contents
+				_this.props.doMarkAsRead(result, card, _this.state.selectedCourse.id, _this);
 		});
 	},
 	handleToggleShowInactiveCourses: function (show) {

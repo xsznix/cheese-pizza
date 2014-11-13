@@ -36,10 +36,14 @@ var Content = React.createClass({
 		html: React.PropTypes.string.isRequired
 	},
 
-	attrsToReactAttrs: function (attrs) {
+	attrsToReactAttrs: function (node) {
 		var obj = {};
 
-		Array.prototype.slice.call(attrs).forEach(function (attr) {
+		// add target="_blank" to  links
+		if (node.tagName === 'A')
+			obj.target = '_blank';
+
+		Array.prototype.slice.call(node.attributes).forEach(function (attr) {
 			var key = attr.nodeName;
 
 			if (key === 'class')
@@ -48,8 +52,16 @@ var Content = React.createClass({
 				key = 'htmlFor';
 			else if (key.substr(0, 2) === 'on') // delete event handlers
 				return;
+			else if (key === 'style') // crappily parse styles into object
+				return obj.style = F.keyify(attr.value.split(';').map(function (sty) {
+					var vals = sty.split(':');
+					return {
+						k: vals[0].trim(),
+						v: vals[1].trim()
+					}
+				}), 'k', function (item) { return item.v; });
 
-			obj[key] = attr.nodeValue;
+			obj[key] = attr.value;
 		});
 
 		return obj;

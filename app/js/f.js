@@ -13,12 +13,14 @@ var F = (function (F, undefined) {
 
 	/**
 	 * Creates an object out of an array using the value of the keyName property
-	 * of each element in the array as the key for a key/value pair.
+	 * of each element in the array as the key and the return value of calling a
+	 * function on the item as the value for a key/value pair.
 	 */
-	F.keyify = function (arr, keyName) {
+	F.keyify = function (arr, keyName, fn) {
 		var obj = {};
+		fn = fn || function (a) { return a; };
 		arr.forEach(function (item) {
-			obj[item[keyName]] = item;
+			obj[item[keyName]] = fn(item);
 		});
 		return obj;
 	}

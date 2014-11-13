@@ -10,7 +10,9 @@ var P = (function (P, undefined) {
 		API_SEARCH = 'network.search',
 		API_CONTENT = 'content.get',
 		API_USER_STATUS = 'user.status',
-		API_GET_USERS = 'network.get_users';
+		API_GET_USERS = 'network.get_users',
+		API_FEEDBACK = 'content.add_feedback',
+		API_UNFEEDBACK = 'content.remove_feedback';
 
 	function aid () {
 		return (new Date()).getTime().toString(36) +
@@ -114,6 +116,34 @@ var P = (function (P, undefined) {
 		return apiCall(API_GET_USERS, {
 			ids: userIds,
 			nid: course
+		});
+	}
+
+	P.thankAnswer = function (cid) {
+		return apiCall(API_FEEDBACK, {
+			cid: cid,
+			type: 'tag_endorse'
+		});
+	}
+
+	P.unthankAnswer = function (cid) {
+		return apiCall(API_UNFEEDBACK, {
+			cid: cid,
+			type: 'tag_endorse'
+		})
+	}
+
+	P.thankQuestion = function (cid) {
+		return apiCall(API_FEEDBACK, {
+			cid: cid,
+			type: 'tag_good'
+		});
+	}
+
+	P.unthankQuestion = function (cid) {
+		return apiCall(API_UNFEEDBACK, {
+			cid: cid,
+			type: 'tag_good'
 		});
 	}
 

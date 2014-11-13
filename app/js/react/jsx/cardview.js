@@ -49,23 +49,72 @@
 		});
 	}
 
+	function userIsInArray (uid, arr) {
+		for (var i = 0, len = arr.length; i < len; i++)
+			if (arr[i].id === uid)
+				return true;
+
+		return false;
+	}
+
 	window.OpCard = React.createClass({
 		displayName: 'OpCard',
 		propTypes: {
+			user: React.PropTypes.object.isRequired,
 			card: React.PropTypes.object.isRequired,
 			getName: React.PropTypes.func.isRequired,
 			getNames: React.PropTypes.func.isRequired
 		},
+		getInitialState: function () {
+			return {
+				numThanks: this.props.card.tag_good.length,
+				userThanked: userIsInArray(this.props.user.id, this.props.card.tag_good)
+			}
+		},
+
+		thank: function () {
+			var setState = this.setState.bind(this),
+				currNumThanks = this.state.numThanks;
+			P.thankQuestion(this.props.card.id).then(function (result) {
+				if (result === 'OK')
+					setState({
+						numThanks: currNumThanks + 1,
+						userThanked: true
+					});
+			});
+		},
+		unthank: function () {
+			var setState = this.setState.bind(this),
+				currNumThanks = this.state.numThanks;
+			P.unthankQuestion(this.props.card.id).then(function (result) {
+				if (result === 'OK')
+					setState({
+						numThanks: currNumThanks - 1,
+						userThanked: false
+					});
+			});
+		},
+		toggleThanks: function () {
+			if (this.state.userThanked)
+				this.unthank();
+			else
+				this.thank();
+		},
+
 		render: function () {
 			var card = this.props.card,
 				names = this.props.getNames,
 				classes = 'card op ' + card.type,
 				q = card.history[0],
 				goodDiv = null,
-				i_end = instEndorsers(card.tag_good);
+				i_end = instEndorsers(card.tag_good),
+				thankText = this.state.userThanked ? 'Unthank' : 'Thank',
+				likesClasses = 'likes';
 
 			if (i_end.length)
 				goodDiv = <div className="approve">{approves(i_end)}</div>;
+			if (this.state.userThanked)
+				likesClasses += ' self-endorsed';
 
 			return (
 				<div className={classes}>
@@ -76,12 +125,12 @@
 					<hr />
 					<div className="meta">
 						<a href="#" className="edit">Edit</a>
-						<a href="#" className="thank">Thank</a>
+						<a href="#" className="thank" onClick={this.toggleThanks}>{thankText}</a>
 						<a href="#" className="follow">Follow</a>
 						<a href="#" className="star">Star</a>
 						<div className="separator" />
 						<div className="views"><i className="fa fa-eye" />{card.unique_views}</div>
-						<div className="likes"><i className="fa fa-thumbs-up" />{card.tag_good.length}</div>
+						<div className={likesClasses}><i className="fa fa-thumbs-up" />{this.state.numThanks}</div>
 					</div>
 				</div>);
 		}
@@ -94,6 +143,41 @@
 			getName: React.PropTypes.func.isRequired,
 			getNames: React.PropTypes.func.isRequired
 		},
+		getInitialState: function () {
+			return {
+				numThanks: this.props.card.tag_endorse.length,
+				userThanked: userIsInArray(this.props.user.id, this.props.card.tag_endorse)
+			}
+		},
+
+		thank: function () {
+			var setState = this.setState.bind(this),
+				currNumThanks = this.state.numThanks;
+			P.thankAnswer(this.props.card.id).then(function (result) {
+				if (result === 'OK')
+					setState({
+						numThanks: currNumThanks + 1,
+						userThanked: true
+					});
+			});
+		},
+		unthank: function () {
+			var setState = this.setState.bind(this),
+				currNumThanks = this.state.numThanks;
+			P.unthankAnswer(this.props.card.id).then(function (result) {
+				if (result === 'OK')
+					setState({
+						numThanks: currNumThanks - 1,
+						userThanked: false
+					});
+			});
+		},
+		toggleThanks: function () {
+			if (this.state.userThanked)
+				this.unthank();
+			else
+				this.thank();
+		},
 		
 		render: function () {
 			var card = this.props.card,
@@ -105,16 +189,19 @@
 				i_end = [],
 				editDiv = null,
 				goodDiv = null,
-				endorseDiv = null;
+				thankText = this.state.userThanked ? 'Unthank' : 'Thank',
+				likesClasses = 'likes';
 
 			if (is_s_ans) {
 				i_end = instEndorsers(card.tag_endorse);
 				editDiv = <a href="#" className="edit">Edit</a>;
 				if (i_end.length) {
 					goodDiv = <div className="approve">{approves(i_end)}</div>
-					endorseDiv = <div className="endorsements"><i className="fa fa-check" />{i_end.length}</div>;
 				}
 			}
+
+			if (this.state.userThanked)
+				likesClasses += ' self-endorsed';
 
 			return (
 				<div className={classes}>
@@ -125,10 +212,9 @@
 					<hr />
 					<div className="meta">
 						{editDiv}
-						<a href="#" className="thank">Thank</a>
+						<a href="#" className="thank" onClick={this.toggleThanks}>{thankText}</a>
 						<div className="separator" />
-						<div className="likes"><i className="fa fa-thumbs-up" />{card.tag_endorse.length}</div>
-						{endorseDiv}
+						<div className={likesClasses}><i className="fa fa-thumbs-up" />{this.state.numThanks}</div>
 					</div>
 				</div>)
 		}
@@ -192,6 +278,7 @@
 	window.CardView = React.createClass({
 		displayName: 'CardView',
 		propTypes: {
+			user: React.PropTypes.object.isRequired,
 			card: React.PropTypes.object,
 			names: React.PropTypes.object.isRequired,
 
@@ -261,22 +348,23 @@
 			if (unloadedUids.length)
 				this.props.doLoadNames(unloadedUids);
 
-			var card = this.props.card,
+			var user = this.props.user,
+				card = this.props.card,
 				children = this.sortChildren(card.children),
 				s_ansCard = null,
 				i_ansCard = null,
 				followupCard = null;
 
 			if (children.s_ans)
-				s_ansCard = <AnswerCard card={children.s_ans} getName={this.safeGetName} getNames={this.safeGetNames} />;
+				s_ansCard = <AnswerCard user={user} card={children.s_ans} getName={this.safeGetName} getNames={this.safeGetNames} />;
 			if (children.i_ans)
-				i_ansCard = <AnswerCard card={children.i_ans} getName={this.safeGetName} getNames={this.safeGetNames} />;
+				i_ansCard = <AnswerCard user={user} card={children.i_ans} getName={this.safeGetName} getNames={this.safeGetNames} />;
 			if (children.followups.length)
 				followupCard = <FollowupCard threads={children.followups} getName={this.safeGetName} />;
 
 			return (
 				<div id="card-view" ref="card">
-					<OpCard card={card} getName={this.safeGetName} getNames={this.safeGetNames} />
+					<OpCard user={user} card={card} getName={this.safeGetName} getNames={this.safeGetNames} />
 					{s_ansCard}
 					{i_ansCard}
 					{followupCard}

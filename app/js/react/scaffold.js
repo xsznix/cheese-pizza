@@ -266,7 +266,8 @@ var Scaffold = React.createClass({
 					      handleLoadMore: this.handleLoadMore, 
 					      handleSearch: this.handleSearch, 
 					      handleUnsearch: this.handleUnsearch}), 
-					React.createElement(CardView, {card: this.state.selectedCardData, 
+					React.createElement(CardView, {user: this.props.user, 
+					          card: this.state.selectedCardData, 
 					          names: namesInCourse, 
 					          doLoadNames: this.handleLoadNames, 
 					          doMarkAsRead: this.props.doMarkAsRead})

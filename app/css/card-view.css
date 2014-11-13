@@ -123,7 +123,7 @@
 	flex: 1 1;
 }
 
-#card-view .card > .meta > .endorsements i {
+#card-view .card > .meta > .likes.self-endorsed i {
 	color: #2ecc71;
 }
 

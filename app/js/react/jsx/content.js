@@ -8,7 +8,10 @@ var Code = React.createClass({
 	},
 
 	highlight: function () {
-		hljs.highlightBlock(this.refs.main.getDOMNode());
+		var node = this.refs.main.getDOMNode();
+		window.setTimeout(function () {
+			hljs.highlightBlock(node);	
+		}, 0);
 	},
 
 	componentDidMount: function () {

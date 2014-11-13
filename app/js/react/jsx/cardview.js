@@ -68,7 +68,9 @@
 		initStateWithProps: function (props) {
 			return {
 				numThanks: props.card.tag_good.length,
-				userThanked: userIsInArray(props.user.id, props.card.tag_good)
+				userThanked: userIsInArray(props.user.id, props.card.tag_good),
+				numFavs: props.card.num_favorites,
+				userFaved: props.card.my_favorite
 			}
 		},
 		getInitialState: function () {
@@ -103,6 +105,34 @@
 			else
 				this.thank();
 		},
+		fav: function () {
+			var setState = this.setState.bind(this),
+				currNumFavs = this.state.numFavs;
+			P.favorite(this.props.card.id).then(function (result) {
+				if (result === 'OK')
+					setState({
+						numFavs: currNumFavs + 1,
+						userFaved: true
+					});
+			});
+		},
+		unfav: function () {
+			var setState = this.setState.bind(this),
+				currNumFavs = this.state.numFavs;
+			P.unfavorite(this.props.card.id).then(function (result) {
+				if (result === 'OK')
+					setState({
+						numFavs: currNumFavs - 1,
+						userFaved: false
+					});
+			});
+		},
+		toggleFav: function () {
+			if (this.state.userFaved)
+				this.unfav();
+			else
+				this.fav();
+		},
 
 		componentWillReceiveProps: function (nextProps) {
 			if (this.props.card.id !== nextProps.card.id)
@@ -117,12 +147,16 @@
 				goodDiv = null,
 				i_end = instEndorsers(card.tag_good),
 				thankText = this.state.userThanked ? 'Unthank' : 'Thank',
-				likesClasses = 'likes';
+				favText = this.state.userFaved ? 'Unstar' : 'Star',
+				likesClasses = 'likes',
+				favesClasses = 'favs';
 
 			if (i_end.length)
 				goodDiv = <div className="approve">{approves(i_end)}</div>;
 			if (this.state.userThanked)
 				likesClasses += ' self-endorsed';
+			if (this.state.userFaved)
+				favesClasses += ' self-faved';
 
 			return (
 				<div className={classes}>
@@ -135,9 +169,10 @@
 						<a href="#" className="edit">Edit</a>
 						<a href="#" className="thank" onClick={this.toggleThanks}>{thankText}</a>
 						<a href="#" className="follow">Follow</a>
-						<a href="#" className="star">Star</a>
+						<a href="#" className="star" onClick={this.toggleFav}>{favText}</a>
 						<div className="separator" />
 						<div className="views"><i className="fa fa-eye" />{card.unique_views}</div>
+						<div className={favesClasses}><i className="fa fa-star" />{this.state.numFavs}</div>
 						<div className={likesClasses}><i className="fa fa-thumbs-up" />{this.state.numThanks}</div>
 					</div>
 				</div>);

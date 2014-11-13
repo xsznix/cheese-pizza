@@ -68,7 +68,9 @@
 		initStateWithProps: function (props) {
 			return {
 				numThanks: props.card.tag_good.length,
-				userThanked: userIsInArray(props.user.id, props.card.tag_good)
+				userThanked: userIsInArray(props.user.id, props.card.tag_good),
+				numFavs: props.card.num_favorites,
+				userFaved: props.card.my_favorite
 			}
 		},
 		getInitialState: function () {
@@ -103,6 +105,34 @@
 			else
 				this.thank();
 		},
+		fav: function () {
+			var setState = this.setState.bind(this),
+				currNumFavs = this.state.numFavs;
+			P.favorite(this.props.card.id).then(function (result) {
+				if (result === 'OK')
+					setState({
+						numFavs: currNumFavs + 1,
+						userFaved: true
+					});
+			});
+		},
+		unfav: function () {
+			var setState = this.setState.bind(this),
+				currNumFavs = this.state.numFavs;
+			P.unfavorite(this.props.card.id).then(function (result) {
+				if (result === 'OK')
+					setState({
+						numFavs: currNumFavs - 1,
+						userFaved: false
+					});
+			});
+		},
+		toggleFav: function () {
+			if (this.state.userFaved)
+				this.unfav();
+			else
+				this.fav();
+		},
 
 		componentWillReceiveProps: function (nextProps) {
 			if (this.props.card.id !== nextProps.card.id)
@@ -117,12 +147,16 @@
 				goodDiv = null,
 				i_end = instEndorsers(card.tag_good),
 				thankText = this.state.userThanked ? 'Unthank' : 'Thank',
-				likesClasses = 'likes';
+				favText = this.state.userFaved ? 'Unstar' : 'Star',
+				likesClasses = 'likes',
+				favesClasses = 'favs';
 
 			if (i_end.length)
 				goodDiv = React.createElement("div", {className: "approve"}, approves(i_end));
 			if (this.state.userThanked)
 				likesClasses += ' self-endorsed';
+			if (this.state.userFaved)
+				favesClasses += ' self-faved';
 
 			return (
 				React.createElement("div", {className: classes}, 
@@ -135,9 +169,10 @@
 						React.createElement("a", {href: "#", className: "edit"}, "Edit"), 
 						React.createElement("a", {href: "#", className: "thank", onClick: this.toggleThanks}, thankText), 
 						React.createElement("a", {href: "#", className: "follow"}, "Follow"), 
-						React.createElement("a", {href: "#", className: "star"}, "Star"), 
+						React.createElement("a", {href: "#", className: "star", onClick: this.toggleFav}, favText), 
 						React.createElement("div", {className: "separator"}), 
 						React.createElement("div", {className: "views"}, React.createElement("i", {className: "fa fa-eye"}), card.unique_views), 
+						React.createElement("div", {className: favesClasses}, React.createElement("i", {className: "fa fa-star"}), this.state.numFavs), 
 						React.createElement("div", {className: likesClasses}, React.createElement("i", {className: "fa fa-thumbs-up"}), this.state.numThanks)
 					)
 				));

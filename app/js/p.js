@@ -12,7 +12,9 @@ var P = (function (P, undefined) {
 		API_USER_STATUS = 'user.status',
 		API_GET_USERS = 'network.get_users',
 		API_FEEDBACK = 'content.add_feedback',
-		API_UNFEEDBACK = 'content.remove_feedback';
+		API_UNFEEDBACK = 'content.remove_feedback',
+		API_FAVORITE = 'content.mark_favorite',
+		API_UNFAVORITE = 'content.mark_unfavorite';
 
 	function aid () {
 		return (new Date()).getTime().toString(36) +
@@ -147,9 +149,20 @@ var P = (function (P, undefined) {
 		});
 	}
 
+	P.favorite = function (cid) {
+		return apiCall(API_FAVORITE, {
+			cid: cid
+		});
+	}
+
+	P.unfavorite = function (cid) {
+		return apiCall(API_UNFAVORITE, {
+			cid: cid
+		});
+	}
+
 	P.FILTERS = [
 		['None', ''],
-		['Starred', 'starred'],
 		['Student', 'student'],
 		['Instructor', 'instructor'],
 		['Question', 'question'],

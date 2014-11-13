@@ -123,6 +123,10 @@
 	flex: 1 1;
 }
 
+#card-view .card > .meta > .favs.self-faved i {
+	color: #f1c40f;
+}
+
 #card-view .card > .meta > .likes.self-endorsed i {
 	color: #2ecc71;
 }

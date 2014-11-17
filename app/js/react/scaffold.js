@@ -139,7 +139,7 @@ var Scaffold = React.createClass({
 	// event handlers
 	handleSelectCourse: function (course) {
 		var refresh = this.props.doRefresh,
-			newFeed = this.props.feeds[course.id].feed;
+			newFeed = this.props.feeds[course.id] ? this.props.feeds[course.id].feed : [];
 		this.setState({
 			selectedCourse: course,
 			filteredCards: this.filterCards({course: course}),

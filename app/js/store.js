@@ -1,22 +1,25 @@
 'use strict';
 
-// TODO: cache everything in memory to speed up store access
 var Store = function (Store, undefined) {
 
-	var s = chrome.storage.local,
+	var cache = {},
 		DEFAULT_STATE = {
 			login: 0
 		};
 
 	function get (key, preprocess) {
 		return new Promise(function (resolve, reject) {
-			chrome.storage.local.get(key, function (value) {
-				if (chrome.runtime.lastError) {
-					reject(chrome.runtime.lastError);
-				} else {
-					(preprocess || resolve)(value[key], resolve, reject);
-				}
-			});
+			if (typeof cache[key] !== 'undefined')
+				(preprocess || resolve)(cache[key], resolve, reject);
+			else
+				chrome.storage.local.get(key, function (value) {
+					if (chrome.runtime.lastError) {
+						reject(chrome.runtime.lastError);
+					} else {
+						cache[key] = value[key];
+						(preprocess || resolve)(value[key], resolve, reject);
+					}
+				});
 		});
 	}
 
@@ -28,6 +31,7 @@ var Store = function (Store, undefined) {
 				if (chrome.runtime.lastError) {
 					reject(chrome.runtime.lastError);
 				} else {
+					cache[key] = value;
 					resolve();
 				}
 			});

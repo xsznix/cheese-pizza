@@ -47,6 +47,7 @@ var Scaffold = React.createClass({
 			showInactiveCourses: !lastNetworkIsActive,
 
 			filterMode: false,
+			loadMoreMode: false,
 			searchMode: false,
 
 			activeFeed: this.props.feeds[lastNetwork].feed,
@@ -54,7 +55,7 @@ var Scaffold = React.createClass({
 		}
 	},
 	componentWillReceiveProps: function (props) {
-		if (!this.state.filterMode) {
+		if (!this.state.filterMode && !this.state.loadMoreMode) {
 			var newFeed = props.feeds[this.state.selectedCourse.id].feed;
 			this.setState({
 				filteredCards: this.filterCards({feed: newFeed}),
@@ -240,7 +241,8 @@ var Scaffold = React.createClass({
 				setState({
 					activeFeed: result.feed,
 					numItemsLoaded: numToLoad,
-					filteredCards: _this.filterCards({feed: result.feed})
+					filteredCards: _this.filterCards({feed: result.feed}),
+					loadMoreMode: true // to avoid load names writing over activeFeed
 				});
 			}
 		});

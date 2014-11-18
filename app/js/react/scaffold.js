@@ -67,7 +67,7 @@ var Scaffold = React.createClass({
 	},
 
 	filterCards: function (options) {
-		var props, user, courseId, feed, filter, folder;
+		var props, user, courseId, feed, filter, folder, readCards = this.state.readCards;
 
 		// read options
 		if (options.props == undefined)
@@ -117,7 +117,7 @@ var Scaffold = React.createClass({
 			});
 		else if (filter === 'unread')
 			feed = feed.filter(function (card) {
-				return card.is_new;
+				return card.is_new && !readCards[card.id];
 			});
 		else if (filter === 'unresolved')
 			feed = feed.filter(function (card) {
@@ -125,7 +125,7 @@ var Scaffold = React.createClass({
 			});
 		else if (filter === 'updated')
 			feed = feed.filter(function (card) {
-				return card.main_version !== card.version;
+				return card.main_version !== card.version && !readCards[card.id];
 			});
 		else if (filter === 'following') {}
 		else if (filter === 'archived') {}

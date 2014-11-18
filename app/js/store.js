@@ -91,6 +91,28 @@ var Store = function (Store, undefined) {
 			}
 		})
 	}
+	Store.markContentAsRead = function (cid, nid, newContent) {
+		var c, found = false;
+		return get('feeds', function (feeds, resolve, reject) {
+			if (!feeds)
+				resolve();
+			else if (!feeds[nid])
+				resolve();
+			else {
+				for (var feed = feeds[nid].feed, i = 0, len = feed.length; i < len; i++)
+					if (feed[i].id === cid) {
+						found = true;
+						c = feed[i];
+						c.version = c.main_version = newContent.main_version;
+						c.is_new = false;
+						Store.setFeedItem(nid, cid, c).then(resolve, reject);
+						break;
+					}
+				if (!found)
+					resolve();
+			}
+		});
+	}
 
 	Store.getContent = function (cid, nid) {
 		return get('content', function (content, resolve, reject) {
@@ -109,25 +131,6 @@ var Store = function (Store, undefined) {
 			if (!content[nid]) content[nid] = {};
 			content[nid][cid] = c;
 			set('content', content).then(resolve, reject);
-		});
-	}
-	Store.markContentAsRead = function (cid, nid, newContent) {
-		var c;
-		return get('content', function (content, resolve, reject) {
-			if (!content)
-				resolve();
-			else if (!content[nid])
-				resolve();
-			else if (!content[nid][cid])
-				resolve();
-			else {
-				c = content[nid][cid];
-				c.version = c.main_version = newContent.main_version;
-				c.is_new = false;
-				resolve();
-			}
-		}).then(function () {
-			return Store.setContent(cid, nid, c);
 		});
 	}
 

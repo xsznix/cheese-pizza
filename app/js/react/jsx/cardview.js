@@ -334,7 +334,6 @@
 			names: React.PropTypes.object.isRequired,
 
 			doLoadNames: React.PropTypes.func.isRequired,
-			doMarkAsRead: React.PropTypes.func.isRequired
 		},
 		sortChildren: function (children) {
 			var sorted = {s_ans: null, i_ans: null, followups: []};

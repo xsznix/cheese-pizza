@@ -30,7 +30,6 @@ function renderDashboard () {
 					names: users || {},
 					doRefresh: doRefresh,
 					doLoadNames: doLoadNames,
-					doMarkAsRead: doMarkAsRead,
 					doLogout: doLogout
 				}), scaffoldContainer);
 			})
@@ -83,13 +82,6 @@ function doLoadNames (uids, nid) {
 					});
 				});
 	});
-}
-
-function doMarkAsRead (newContent, listItemContent, nid, rootComponent) {
-	var newListItemContent = F.clone(listItemContent);
-	newListItemContent.version = listItemContent.main_version;
-	newListItemContent.is_new = false;
-	Store.setFeedItem(nid, newContent.id, newListItemContent).then(renderDashboard);
 }
 
 function doLogout () {

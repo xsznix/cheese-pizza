@@ -7,6 +7,7 @@ var ListItem = React.createClass({
 		card: React.PropTypes.object.isRequired,
 		selectedCard: React.PropTypes.string,
 		handleSelectCard: React.PropTypes.func.isRequired,
+		readCards: React.PropTypes.object.isRequired
 	},
 	boldify: function (text) {
 		return text.replace(/___bold_start___/g, '<b>').replace(/___bold_end___/g, '</b>');
@@ -23,7 +24,8 @@ var ListItem = React.createClass({
 			handleSelectCard = this.props.handleSelectCard,
 			selectThis = function () {
 				handleSelectCard(card);
-			};
+			},
+			isTempRead = this.props.readCards[card.id];
 
 		if (this.props.selectedCard === card.id)
 			classes.push('selected');
@@ -31,11 +33,11 @@ var ListItem = React.createClass({
 		// TODO: verify that these data actually mean what I think they mean
 		if (card.no_answer)
 			classes.push('no-answer');
-		if (card.is_new)
+		if (card.is_new && !isTempRead)
 			classes.push('new');
 		if (card.no_answer_followup)
 			followup_div = React.createElement("div", {className: "unresolved-count"}, card.no_answer_followup);
-		if (card.main_version !== card.version)
+		if (card.main_version !== card.version && !isTempRead)
 			unviewed_div = React.createElement("div", {className: "unviewed-count"}, card.main_version - (card.version || 0));
 		if (card.has_s)
 			s_div = (card.tag_endorse_prof ?
@@ -72,7 +74,8 @@ var Bucket = React.createClass({
 	propTypes: {
 		bucket: React.PropTypes.object.isRequired,
 		selectedCard: React.PropTypes.string,
-		handleSelectCard: React.PropTypes.func.isRequired
+		handleSelectCard: React.PropTypes.func.isRequired,
+		readCards: React.PropTypes.object.isRequired
 	},
 
 	getInitialState: function () {
@@ -91,6 +94,7 @@ var Bucket = React.createClass({
 		var bucket = this.props.bucket,
 			selectedCard = this.props.selectedCard,
 			handleSelectCard = this.props.handleSelectCard,
+			readCards = this.props.readCards,
 			collapsed = this.state.collapsed,
 			classes, iconClasses;
 		if (collapsed) {
@@ -109,7 +113,8 @@ var Bucket = React.createClass({
 					return React.createElement(ListItem, {key: card.id, 
 					                 card: card, 
 					                 selectedCard: selectedCard, 
-					                 handleSelectCard: handleSelectCard})
+					                 handleSelectCard: handleSelectCard, 
+					                 readCards: readCards})
 				})
 			))
 	}
@@ -125,7 +130,8 @@ var List = React.createClass({
 		handleSearch: React.PropTypes.func.isRequired,
 		handleUnsearch: React.PropTypes.func.isRequired,
 		filterMode: React.PropTypes.bool.isRequired,
-		searchMode: React.PropTypes.bool.isRequired
+		searchMode: React.PropTypes.bool.isRequired,
+		readCards: React.PropTypes.object.isRequired
 	},
 	getInitialState: function () {
 		return {
@@ -190,6 +196,7 @@ var List = React.createClass({
 			selectedCard = this.props.selectedCard,
 			handleSelectCard = this.props.handleSelectCard,
 			handleLoadMore = this.props.handleLoadMore,
+			readCards = this.props.readCards,
 			loadMore = function () { handleLoadMore(false) },
 			loadAll = function () { handleLoadMore(true) },
 			listClasses = '';
@@ -214,7 +221,8 @@ var List = React.createClass({
 							React.createElement(Bucket, {key: bucket.name, 
 							        bucket: bucket, 
 							        selectedCard: selectedCard, 
-							        handleSelectCard: handleSelectCard}));
+							        handleSelectCard: handleSelectCard, 
+							        readCards: readCards}));
 					}), 
 					this.props.filterMode ? null : React.createElement("div", {className: "load-actions"}, 
 						React.createElement("div", {className: "load-150", onClick: loadMore}, "Load more"), 

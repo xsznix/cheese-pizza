@@ -111,6 +111,25 @@ var Store = function (Store, undefined) {
 			set('content', content).then(resolve, reject);
 		});
 	}
+	Store.markContentAsRead = function (cid, nid, newContent) {
+		var c;
+		return get('content', function (content, resolve, reject) {
+			if (!content)
+				resolve();
+			else if (!content[nid])
+				resolve();
+			else if (!content[nid][cid])
+				resolve();
+			else {
+				c = content[nid][cid];
+				c.version = c.main_version = newContent.main_version;
+				c.is_new = false;
+				resolve();
+			}
+		}).then(function () {
+			return Store.setContent(cid, nid, c);
+		});
+	}
 
 	Store.getSelf = function () {
 		return get('self');

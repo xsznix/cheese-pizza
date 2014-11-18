@@ -10,7 +10,6 @@ var Scaffold = React.createClass({
 
 		doRefresh: React.PropTypes.func.isRequired,
 		doLoadNames: React.PropTypes.func.isRequired,
-		doMarkAsRead: React.PropTypes.func.isRequired,
 		doLogout: React.PropTypes.func.isRequired
 	},
 	getInitialState: function () {
@@ -39,6 +38,8 @@ var Scaffold = React.createClass({
 			selectedOption: '',
 			filteredCards: this.props.feeds[lastNetwork].feed,
 
+			readCards: {},
+
 			selectedCardData: null,
 
 			activeCourses: activeCourses,
@@ -58,7 +59,8 @@ var Scaffold = React.createClass({
 			this.setState({
 				filteredCards: this.filterCards({feed: newFeed}),
 				activeFeed: newFeed,
-				numItemsLoaded: newFeed.length
+				numItemsLoaded: newFeed.length,
+				readCards: {}
 			});
 		}
 	},
@@ -135,6 +137,14 @@ var Scaffold = React.createClass({
 
 		return feed;
 	},
+	markAsRead: function (cid, nid, content) {
+		Store.markContentAsRead(cid, nid, content);
+		var readCards = this.state.readCards;
+		this.state.readCards[cid] = true;
+		this.setState({
+			readCards: readCards
+		});
+	},
 
 	// event handlers
 	handleSelectCourse: function (course) {
@@ -208,8 +218,7 @@ var Scaffold = React.createClass({
 				setState({
 					selectedCardData: result
 				});
-			if (!_this.state.searchMode) // search results return different list item contents
-				_this.props.doMarkAsRead(result, card, _this.state.selectedCourse.id, _this);
+			_this.markAsRead(card.id, _this.state.selectedCourse.id, result);
 		});
 	},
 	handleToggleShowInactiveCourses: function (show) {
@@ -293,12 +302,13 @@ var Scaffold = React.createClass({
 					      handleSearch: this.handleSearch, 
 					      handleUnsearch: this.handleUnsearch, 
 					      filterMode: this.state.filterMode, 
-					      searchMode: this.state.searchMode}), 
+					      searchMode: this.state.searchMode, 
+					      readCards: this.state.readCards}), 
 					React.createElement(CardView, {user: this.props.user, 
 					          card: this.state.selectedCardData, 
 					          names: namesInCourse, 
 					          doLoadNames: this.handleLoadNames, 
-					          doMarkAsRead: this.props.doMarkAsRead})
+					          doMarkAsRead: this.markAsRead})
 				)
 			)
 		)

@@ -85,8 +85,10 @@ var Content = React.createClass({
 				}));
 	},
 	prepareNode: function (node, i, arr, isTopLevel) {
-		if (node.nodeType === 3)
+		if (node.nodeType === 3) // text
 			return this.prepareTextNode(node);
+		else if (node.nodeType === 8) // comment
+			return null;
 
 		var tag = node.tagName.toLowerCase(), attrs, children;
 
